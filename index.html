@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.2.3 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.2.4 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.2.3</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.2.4</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.3</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.4</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -962,9 +962,40 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-function sellerAccessStateKey(id){ return "rp_seller_access_" + id; }
-function sellerAccessState(id){ return localStorage.getItem(sellerAccessStateKey(id)) || "active"; }
-function setSellerAccessState(id,state){ localStorage.setItem(sellerAccessStateKey(id),state); }
+// v9.2.4: статус доступа продавцов берём только с сервера Supabase.
+// localStorage больше не используется, поэтому ПК и телефон показывают один статус.
+let sellerAccessStates = {};
+let sellerAccessStatusesLoaded = false;
+let sellerAccessStatusesLoading = false;
+
+function sellerAccessState(id){
+  return sellerAccessStates[id] || "loading";
+}
+
+async function loadSellerAccessStatuses(force=false){
+  if(!isAdmin()) return;
+  if(sellerAccessStatusesLoading) return;
+  if(sellerAccessStatusesLoaded && !force) return;
+  sellerAccessStatusesLoading = true;
+  try{
+    const {data,error}=await sb.rpc("admin_seller_access_statuses");
+    if(error) throw error;
+    const next={};
+    (data||[]).forEach(row=>{ next[row.user_id]=row.is_blocked ? "blocked" : "active"; });
+    sellerAccessStates=next;
+    sellerAccessStatusesLoaded=true;
+  }catch(e){
+    console.error("Не удалось загрузить серверные статусы продавцов:",e);
+  }finally{
+    sellerAccessStatusesLoading=false;
+  }
+}
+
+async function refreshSellerAccessStatuses(){
+  sellerAccessStatusesLoaded=false;
+  await loadSellerAccessStatuses(true);
+  renderAdminPanel();
+}
 
 function applyBackupPermissions(){
   const restore=document.getElementById("adminRestoreBackup");
@@ -980,6 +1011,9 @@ function applyBackupPermissions(){
 
 function renderAdminPanel() {
   if (!isAdmin()) return;
+  if(!sellerAccessStatusesLoaded && !sellerAccessStatusesLoading){
+    loadSellerAccessStatuses().then(()=>renderAdminPanel());
+  }
   const btn = document.getElementById("adminMenuBtn");
   if (btn) btn.classList.remove("hidden");
 
@@ -1009,7 +1043,9 @@ function renderAdminPanel() {
         <td>
           ${sellerAccessState(s.id)==="blocked"
             ? '<span class="badge bgray">Заблокирован</span> <button class="btn" style="background:#159447;color:#fff" onclick="unblockSeller(\''+s.id+'\')">Разблокировать</button>'
-            : '<span class="badge bgreen">Активен</span> <button class="btn danger" onclick="blockSeller(\''+s.id+'\')">Заблокировать</button>'}
+            : sellerAccessState(s.id)==="active"
+              ? '<span class="badge bgreen">Активен</span> <button class="btn danger" onclick="blockSeller(\''+s.id+'\')">Заблокировать</button>'
+              : '<span class="badge bgray">Проверяем статус…</span>'}
           <button class="btn primary" onclick="openSellerDetails('${s.id}')">Открыть</button>
           <button class="btn graybtn" onclick="changeSellerPassword('${s.id}')">Пароль</button>
         </td>
@@ -1088,16 +1124,14 @@ async function blockSeller(userId) {
   if(!confirm("Заблокировать доступ этого продавца? Его данные сохранятся.")) return;
   try {
     await callManageSellers({action:"block",userId});
-    setSellerAccessState(userId,"blocked");
-    renderAdminPanel();
+    await refreshSellerAccessStatuses();
     alert("Доступ продавца заблокирован.");
   } catch(e){ alert("Ошибка: "+e.message); }
 }
 async function unblockSeller(userId) {
   try {
     await callManageSellers({action:"unblock",userId});
-    setSellerAccessState(userId,"active");
-    renderAdminPanel();
+    await refreshSellerAccessStatuses();
     alert("Доступ продавца восстановлен.");
   } catch(e){ alert("Ошибка: "+e.message); }
 }
@@ -4350,7 +4384,7 @@ function exportData() {
     const ownDealIds = new Set(ownDeals.map(x => x.id));
 
     backup = {
-      version: "9.2.3",
+      version: "9.2.4",
       exportedAt: new Date().toISOString(),
       scope: "seller",
       sellerId: sid,
@@ -4588,7 +4622,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.2.3 MOBILE UX ===== */
+/* ===== v9.2.4 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
