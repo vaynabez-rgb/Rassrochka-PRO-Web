@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.2.5 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.2.6 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.2.5</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.2.6</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.5</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.6</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -568,7 +568,7 @@ th{font-size:13px;color:#68758b}
       <div><label>Фамилия *</label><input id="cSurname"></div>
       <div><label>Имя *</label><input id="cName"></div>
       <div><label>Отчество</label><input id="cPatronymic"></div>
-      <div><label>Дата рождения *</label><input id="cBirth" type="date"></div>
+      <div><label>Дата рождения *</label><input id="cBirth" type="date" min="1900-01-01"></div>
       <div><label>Телефон</label><input id="cPhone"></div>
       <div><label>Адрес</label><input id="cAddress"></div>
       <div><label>Серия паспорта</label><input id="cPassportSeries" inputmode="numeric" maxlength="4" oninput="onlyDigits(this,4)" placeholder="4 цифры"></div>
@@ -962,7 +962,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.2.5: статус доступа продавцов берём только с сервера Supabase.
+// v9.2.6: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -1665,6 +1665,46 @@ function closeClientModal() {
 
 
 /* ================================
+   STRICT CLIENT BIRTH DATE
+================================ */
+function clientBirthIsValid(value){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));
+  if(!m) return false;
+  const year=Number(m[1]);
+  const d=new Date(value+'T12:00:00');
+  const today=new Date();
+  today.setHours(23,59,59,999);
+  return year>=1900 && year<=today.getFullYear() && !Number.isNaN(d.getTime()) && d<=today;
+}
+
+function setupStrictClientBirth(){
+  const el=document.getElementById('cBirth');
+  if(!el) return;
+  const now=new Date();
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  const dd=String(now.getDate()).padStart(2,'0');
+  el.min='1900-01-01';
+  el.max=`${now.getFullYear()}-${mm}-${dd}`;
+  el.addEventListener('input',()=>{
+    const v=el.value||'';
+    const y=(v.split('-')[0]||'');
+    if(y.length>4 || (y.length===4 && (Number(y)<1900 || Number(y)>now.getFullYear()))){
+      el.value='';
+      el.setCustomValidity('Введите год рождения четырьмя цифрами от 1900 до текущего года.');
+    }else{
+      el.setCustomValidity('');
+    }
+  });
+  el.addEventListener('change',()=>{
+    if(el.value && !clientBirthIsValid(el.value)){
+      el.value='';
+      alert('Некорректная дата рождения. Введите год четырьмя цифрами от 1900 до текущего года.');
+      el.focus();
+    }
+  });
+}
+
+/* ================================
    SAVE CLIENT
 ================================ */
 
@@ -1721,15 +1761,9 @@ async function saveClient() {
   }
 
 
-  // Проверка даты рождения: реальная календарная дата, не в будущем, год из 4 цифр.
-  const birthMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birth);
-  const birthDate = new Date(birth + "T12:00:00");
-  const todayDate = new Date();
-  todayDate.setHours(23,59,59,999);
-  const minBirthDate = new Date("1900-01-01T00:00:00");
-
-  if (!birthMatch || Number(birthMatch[1]) < 1900 || birthDate < minBirthDate || birthDate > todayDate || Number.isNaN(birthDate.getTime())) {
-    alert("Укажите корректную дату рождения. Год должен быть от 1900 до текущей даты.");
+  // Строгая проверка даты рождения для создания и редактирования клиента.
+  if (!clientBirthIsValid(birth)) {
+    alert("Укажите корректную дату рождения. Год — ровно 4 цифры, от 1900 до текущей даты.");
     document.getElementById("cBirth")?.focus();
     return;
   }
@@ -1943,9 +1977,12 @@ function editClient(id) {
     "cPatronymic"
   ).value = c.patronymic || "";
 
-  document.getElementById(
-    "cBirth"
-  ).value = c.birth || "";
+  const birthInput=document.getElementById("cBirth");
+  const storedBirth=c.birth||"";
+  birthInput.value=clientBirthIsValid(storedBirth) ? storedBirth : "";
+  if(storedBirth && !clientBirthIsValid(storedBirth)){
+    setTimeout(()=>alert("У этого клиента сохранена некорректная дата рождения. Введите правильную дату (год из 4 цифр) перед сохранением."),50);
+  }
 
   document.getElementById(
     "cPhone"
@@ -4636,7 +4673,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.2.5 MOBILE UX ===== */
+/* ===== v9.2.6 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
@@ -4666,6 +4703,7 @@ const v88Observer=new MutationObserver(()=>{ if(window.innerWidth<=700) requestA
 v88Observer.observe(document.documentElement,{subtree:true,childList:true});
 window.addEventListener('resize',()=>v88ApplyTableLabels(document));
 setInterval(()=>{try{v88RenderToday();v88ApplyTableLabels(document)}catch(_){}},1500);
+setupStrictClientBirth();
 
 </script>
 </body>
