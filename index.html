@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.2.4 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.2.5 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.2.4</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.2.5</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.4</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.5</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -962,7 +962,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.2.4: статус доступа продавцов берём только с сервера Supabase.
+// v9.2.5: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -1717,6 +1717,20 @@ async function saveClient() {
       "Фамилия, имя и дата рождения обязательны."
     );
 
+    return;
+  }
+
+
+  // Проверка даты рождения: реальная календарная дата, не в будущем, год из 4 цифр.
+  const birthMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birth);
+  const birthDate = new Date(birth + "T12:00:00");
+  const todayDate = new Date();
+  todayDate.setHours(23,59,59,999);
+  const minBirthDate = new Date("1900-01-01T00:00:00");
+
+  if (!birthMatch || Number(birthMatch[1]) < 1900 || birthDate < minBirthDate || birthDate > todayDate || Number.isNaN(birthDate.getTime())) {
+    alert("Укажите корректную дату рождения. Год должен быть от 1900 до текущей даты.");
+    document.getElementById("cBirth")?.focus();
     return;
   }
 
@@ -4622,7 +4636,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.2.4 MOBILE UX ===== */
+/* ===== v9.2.5 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
