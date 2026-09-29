@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.3.2 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.3.3 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.2</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.3</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.2</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.3</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -567,6 +567,26 @@ th{font-size:13px;color:#68758b}
   </div>
 </div>
 
+<div id="editSellerModal" class="modal hidden">
+  <div class="modal-card" style="width:min(650px,100%)">
+    <div class="modal-head"><h2>Редактировать магазин</h2><button class="close" onclick="closeEditSellerModal()">×</button></div>
+    <input id="editSellerUserId" type="hidden">
+    <div class="grid">
+      <div><label>ФИО продавца *</label><input id="editSellerName"></div>
+      <div><label>Название магазина</label><input id="editSellerShop"></div>
+      <div><label>Email для входа *</label><input id="editSellerEmail" type="email"></div>
+      <div><label>Телефон</label><input id="editSellerPhone"></div>
+      <div style="grid-column:1/-1"><label>Адрес магазина</label><input id="editSellerAddress"></div>
+    </div>
+    <div class="notice" style="margin-top:12px">Изменение email меняет настоящий адрес входа продавца. Клиенты, рассрочки, платежи, история и срок доступа сохраняются.</div>
+    <div id="editSellerMessage" class="muted" style="margin-top:12px"></div>
+    <div class="row-actions">
+      <button id="saveSellerProfileBtn" class="btn primary" onclick="saveSellerProfileByAdmin()">Сохранить изменения</button>
+      <button class="btn graybtn" onclick="closeEditSellerModal()">Отмена</button>
+    </div>
+  </div>
+</div>
+
 <div id="sellerDetailsModal" class="modal hidden">
   <div class="modal-card" style="width:min(1100px,100%)">
     <div class="modal-head"><h2 id="sellerDetailsTitle">Кабинет продавца</h2><button class="close" onclick="closeSellerDetails()">×</button></div>
@@ -818,7 +838,7 @@ async function enterOnlineApp(user) {
 
   currentRole = profile.role || "seller";
 
-  // v9.3.2: окончание подписки закрывает только доступ. Данные не удаляются.
+  // v9.3.3: окончание подписки закрывает только доступ. Данные не удаляются.
   if(currentRole !== "admin") {
     const {data:sub,error:subError}=await sb.rpc("seller_subscription_status");
     if(subError){
@@ -1018,7 +1038,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.3.2: статус доступа продавцов берём только с сервера Supabase.
+// v9.3.3: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -1187,6 +1207,7 @@ function renderAdminPanel() {
               ? '<span class="badge bgreen">Активен</span> <button class="btn danger" onclick="blockSeller(\''+s.id+'\')">Заблокировать</button>'
               : '<span class="badge bgray">Проверяем статус…</span>'}
           <button class="btn primary" onclick="openSellerDetails('${s.id}')">Открыть</button>
+          <button class="btn graybtn" onclick="openEditSellerModal('${s.id}')">Редактировать магазин</button>
           <button class="btn graybtn" onclick="changeSellerPassword('${s.id}')">Пароль</button>
         </td>
       </tr>`).join("")}
@@ -1275,6 +1296,47 @@ async function unblockSeller(userId) {
     alert("Доступ продавца восстановлен.");
   } catch(e){ alert("Ошибка: "+e.message); }
 }
+async function openEditSellerModal(userId){
+  if(!isAdmin()) return;
+  const msg=document.getElementById("editSellerMessage");
+  msg.textContent="Загрузка данных магазина...";
+  document.getElementById("editSellerUserId").value=userId;
+  document.getElementById("editSellerModal").classList.remove("hidden");
+  try{
+    const r=await callManageSellers({action:"get-seller",userId});
+    const x=r.seller||{};
+    document.getElementById("editSellerName").value=x.fullName||"";
+    document.getElementById("editSellerShop").value=x.shopName||"";
+    document.getElementById("editSellerEmail").value=x.email||"";
+    document.getElementById("editSellerPhone").value=x.phone||"";
+    document.getElementById("editSellerAddress").value=x.address||"";
+    msg.textContent="";
+  }catch(e){ msg.textContent="Ошибка: "+e.message; }
+}
+function closeEditSellerModal(){ document.getElementById("editSellerModal").classList.add("hidden"); }
+async function saveSellerProfileByAdmin(){
+  if(!isAdmin()) return;
+  const userId=document.getElementById("editSellerUserId").value;
+  const fullName=document.getElementById("editSellerName").value.trim();
+  const shopName=document.getElementById("editSellerShop").value.trim();
+  const email=document.getElementById("editSellerEmail").value.trim();
+  const phone=document.getElementById("editSellerPhone").value.trim();
+  const address=document.getElementById("editSellerAddress").value.trim();
+  const msg=document.getElementById("editSellerMessage");
+  if(!userId||!fullName||!email){ msg.textContent="ФИО и email обязательны."; return; }
+  const btn=document.getElementById("saveSellerProfileBtn"); btn.disabled=true; msg.textContent="Сохраняем...";
+  try{
+    await callManageSellers({action:"update-seller",userId,email,fullName,shopName,phone,address});
+    msg.textContent="Данные магазина сохранены.";
+    sellerDirectoryCache=null;
+    await loadServerData();
+    renderAdminPanel();
+    if(document.getElementById("sellerDirectory") && !document.getElementById("sellerDirectory").classList.contains("hidden")) await renderSellerDirectory(true);
+    setTimeout(closeEditSellerModal,500);
+  }catch(e){ msg.textContent="Ошибка: "+e.message; }
+  finally{ btn.disabled=false; }
+}
+
 async function changeSellerPassword(userId) {
   const password=prompt("Введите новый временный пароль (минимум 6 символов):");
   if(password===null) return;
@@ -4956,7 +5018,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.3.2 MOBILE UX ===== */
+/* ===== v9.3.3 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
