@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.3.1 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.3.2 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.1</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.2</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.1</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.2</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -742,19 +742,27 @@ function seller() {
 
 function isAdmin() { return currentRole === "admin"; }
 
+function clientIsArchived(clientId){
+  return !!db.clients.find(c=>c.id===clientId)?.archivedAt;
+}
+
 function myClients() {
-  return isAdmin() ? db.clients : db.clients.filter(x => x.sellerId === currentSellerId);
+  return db.clients.filter(x =>
+    (isAdmin() || x.sellerId === currentSellerId) && !x.archivedAt
+  );
 }
 
 function myDeals() {
   return db.deals.filter(x =>
     (isAdmin() || x.sellerId === currentSellerId) &&
-    x.status !== "cancelled"
+    x.status !== "cancelled" && !clientIsArchived(x.clientId)
   );
 }
 
 function allMyDeals() {
-  return isAdmin() ? db.deals : db.deals.filter(x => x.sellerId === currentSellerId);
+  return db.deals.filter(x =>
+    (isAdmin() || x.sellerId === currentSellerId) && !clientIsArchived(x.clientId)
+  );
 }
 
 function fullName(c) {
@@ -810,7 +818,7 @@ async function enterOnlineApp(user) {
 
   currentRole = profile.role || "seller";
 
-  // v9.3.1: окончание подписки закрывает только доступ. Данные не удаляются.
+  // v9.3.2: окончание подписки закрывает только доступ. Данные не удаляются.
   if(currentRole !== "admin") {
     const {data:sub,error:subError}=await sb.rpc("seller_subscription_status");
     if(subError){
@@ -896,7 +904,8 @@ async function loadServerData() {
     patronymic:x.patronymic||"",birth:x.birth_date||"",phone:x.phone||"",
     phone2:x.phone2||"",address:x.address||"",passportSeries:x.passport_series||"",
     passportNumber:x.passport_number||"",tag:x.tag||"",note:x.note||"",
-    photos:[],documentPhotoCount:0,createdAt:x.created_at
+    photos:[],documentPhotoCount:0,createdAt:x.created_at,
+    archivedAt:x.archived_at||null,archivedBy:x.archived_by||null
   }));
 
   db.deals=(dr.data||[]).map(x=>({
@@ -1009,7 +1018,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.3.1: статус доступа продавцов берём только с сервера Supabase.
+// v9.3.2: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -2662,6 +2671,12 @@ function viewClient(id) {
 
       </button>
 
+      <button
+        class="btn danger"
+        onclick="archiveClient('${c.id}')">
+        Удалить клиента
+      </button>
+
     </div>
 
   `;
@@ -2672,6 +2687,45 @@ function viewClient(id) {
   ).classList.remove("hidden");
 }
 
+
+async function archiveClient(id){
+  const c=db.clients.find(x=>x.id===id);
+  if(!c || c.archivedAt || (!isAdmin() && c.sellerId!==currentSellerId)) return;
+  const sellerId=c.sellerId;
+  const clientDeals=db.deals.filter(d=>d.clientId===id);
+  const dealIds=new Set(clientDeals.map(d=>d.id));
+  const clientPayments=db.payments.filter(p=>dealIds.has(p.dealId));
+  const clientBlacklist=db.blacklist.filter(b=>b.clientId===id);
+  if(!confirm(`Удалить клиента «${fullName(c)}»?\n\nКлиент исчезнет из рабочего кабинета и попадёт в корзину на 30 дней. Его рассрочки, платежи и финансовая история НЕ удалятся.`)) return;
+  const deletedAt=new Date();
+  const purgeAt=new Date(deletedAt.getTime()+30*24*60*60*1000);
+  const trashItem={
+    id:crypto.randomUUID(),sellerId,itemType:"client",itemId:c.id,
+    title:`Клиент • ${fullName(c)}`,
+    payload:{client:{...c},dealIds:[...dealIds],dealCount:clientDeals.length,paymentCount:clientPayments.length,blacklistCount:clientBlacklist.length},
+    deletedAt:deletedAt.toISOString(),purgeAt:purgeAt.toISOString(),deletedBy:currentSellerId
+  };
+  try{
+    if(serverReady){
+      const {error:trashError}=await sb.from("trash_items").insert({
+        id:trashItem.id,seller_id:sellerId,item_type:"client",item_id:c.id,
+        title:trashItem.title,payload:trashItem.payload,deleted_by:currentSellerId,
+        deleted_at:trashItem.deletedAt,purge_at:trashItem.purgeAt
+      });
+      if(trashError) throw trashError;
+      let q=sb.from("clients").update({archived_at:trashItem.deletedAt,archived_by:currentSellerId}).eq("id",id);
+      if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
+      const {error}=await q;
+      if(error){ await sb.from("trash_items").delete().eq("id",trashItem.id); throw error; }
+    }
+    c.archivedAt=trashItem.deletedAt; c.archivedBy=currentSellerId;
+    db.trash=db.trash||[]; db.trash.unshift(trashItem);
+    addAudit("Клиент перемещён в корзину",`${fullName(c)} • история сохранена`);
+    localStorage.setItem(DBKEY,JSON.stringify(db));
+    closeDetails(); refreshAll(); renderTrash();
+    alert("Клиент перемещён в корзину. Вся история рассрочек и платежей сохранена.");
+  }catch(e){ alert("Не удалось удалить клиента: "+(e.message||e)); }
+}
 
 function closeDetails() {
 
@@ -4674,13 +4728,31 @@ function renderTrash(){
   if(!arr.length){box.innerHTML='<div class="empty">Корзина пуста.</div>';return;}
   box.innerHTML=`<div class="admin-table-wrap"><table><thead><tr><th>Что удалено</th>${isAdmin()?'<th>Магазин</th>':''}<th>Дата удаления</th><th>Осталось</th><th></th></tr></thead><tbody>${arr.map(x=>{
     const shop=db.sellers.find(s=>s.id===x.sellerId)?.shop||'—';
-    return `<tr><td><b>${esc(x.title||'Удалённая запись')}</b><br><small>${x.itemType==='payment'?'Платёж':esc(x.itemType||'Запись')}</small></td>${isAdmin()?`<td>${esc(shop)}</td>`:''}<td>${dateRu(String(x.deletedAt||'').slice(0,10))}</td><td>${trashDaysLeft(x)} дн.</td><td><button class="btn primary" onclick="restoreTrashItem('${x.id}')">Восстановить</button></td></tr>`;
+    return `<tr><td><b>${esc(x.title||'Удалённая запись')}</b><br><small>${x.itemType==='payment'?'Платёж':x.itemType==='client'?'Клиент':esc(x.itemType||'Запись')}</small></td>${isAdmin()?`<td>${esc(shop)}</td>`:''}<td>${dateRu(String(x.deletedAt||'').slice(0,10))}</td><td>${trashDaysLeft(x)} дн.</td><td><button class="btn primary" onclick="restoreTrashItem('${x.id}')">Восстановить</button></td></tr>`;
   }).join('')}</tbody></table></div>`;
 }
 async function restoreTrashItem(id){
   const item=(db.trash||[]).find(x=>x.id===id); if(!item)return;
   if(!isAdmin()&&item.sellerId!==currentSellerId)return;
-  if(item.itemType!=="payment"){alert("Восстановление этого типа записи пока не требуется в текущей версии.");return;}
+  if(item.itemType==="client"){
+    const c=db.clients.find(x=>x.id===item.itemId);
+    if(!c){alert("Карточка клиента не найдена. История сохранена, обратитесь к администратору.");return;}
+    try{
+      if(serverReady){
+        let q=sb.from("clients").update({archived_at:null,archived_by:null}).eq("id",item.itemId);
+        if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
+        const {error}=await q; if(error)throw error;
+        const {error:delError}=await sb.from("trash_items").delete().eq("id",id); if(delError)throw delError;
+      }
+      c.archivedAt=null;c.archivedBy=null;
+      db.trash=db.trash.filter(x=>x.id!==id);
+      addAudit("Клиент восстановлен из корзины",fullName(c));
+      localStorage.setItem(DBKEY,JSON.stringify(db));refreshAll();renderTrash();
+      alert("Клиент восстановлен вместе со всей историей.");
+    }catch(e){alert("Не удалось восстановить клиента: "+(e.message||e));}
+    return;
+  }
+  if(item.itemType!=="payment"){alert("Восстановление этого типа записи пока не поддерживается.");return;}
   const p=item.payload||{};
   if(!db.deals.some(d=>d.id===p.dealId)){alert("Нельзя восстановить платёж: связанная рассрочка не найдена.");return;}
   try{
@@ -4884,7 +4956,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.3.1 MOBILE UX ===== */
+/* ===== v9.3.2 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
