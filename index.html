@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v8.6</title>
+<title>Рассрочка PRO v9.3.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.3.3 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.3.4 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.3</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.4</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.3</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.4</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -228,6 +228,7 @@ th{font-size:13px;color:#68758b}
         <button onclick="showPage('blacklist',this)">Чёрный список</button>
         <button onclick="showPage('globalSearch',this)">Общий поиск</button>
         <button onclick="showPage('sellerDirectory',this)">Продавцы</button>
+        <button onclick="showPage('support',this)">Поддержка</button>
         <button onclick="showPage('analytics',this)">Аналитика</button>
         <button onclick="showPage('notifications',this)">Напоминания</button>
         <button onclick="showPage('trash',this)">Корзина</button>
@@ -431,8 +432,11 @@ th{font-size:13px;color:#68758b}
           <h2>Общий поиск клиента</h2>
           <div class="grid">
             <div style="position:relative"><label>ФИО</label><input id="globalName" placeholder="Начните вводить ФИО..." autocomplete="off" oninput="scheduleGlobalSuggestions()" onfocus="scheduleGlobalSuggestions()"><div id="globalNameSuggestions" class="client-search-results hidden"></div></div>
-            <div><label>Дата рождения (необязательно)</label><input id="globalBirth" type="date"></div>
+            <div><label>Дата рождения (необязательно)</label><input id="globalBirth" type="text" inputmode="numeric" maxlength="10" placeholder="ДД.ММ.ГГГГ" autocomplete="off" oninput="maskClientBirthInput(this)"></div>
+            <div><label>Серия паспорта (необязательно)</label><input id="globalPassportSeries" type="text" inputmode="numeric" maxlength="4" placeholder="4 цифры" autocomplete="off" oninput="onlyDigits(this,4)"></div>
+            <div><label>Номер паспорта (необязательно)</label><input id="globalPassportNumber" type="text" inputmode="numeric" maxlength="6" placeholder="6 цифр" autocomplete="off" oninput="onlyDigits(this,6)"></div>
           </div>
+          <div class="form-help">Для обычного поиска достаточно ФИО. Дату рождения и паспорт можно указать для более точного совпадения.</div>
           <div class="row-actions"><button class="btn primary" onclick="searchGlobal()">Найти</button></div>
           <div id="globalResults"></div>
         </div>
@@ -446,6 +450,22 @@ th{font-size:13px;color:#68758b}
           <div class="notice">Контактные данные продавцов заполняет и изменяет только администратор.</div>
         </div>
         <div class="card"><div id="sellerDirectoryList"><div class="notice">Загрузка продавцов...</div></div></div>
+      </section>
+
+      <section id="support" class="hidden">
+        <div class="card" style="max-width:760px">
+          <h2>Поддержка</h2>
+          <p class="muted">Если возник вопрос или проблема с приложением, свяжитесь с поддержкой.</p>
+          <div class="info-grid" style="margin-top:18px">
+            <div class="info-box"><b>Телефон поддержки</b><br>8 963 060-06-09</div>
+            <div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.4</div>
+          </div>
+          <div class="row-actions" style="margin-top:18px">
+            <button class="btn primary" onclick="callSupport()">📞 Позвонить в поддержку</button>
+            <button class="btn primary" onclick="whatsappSupport()">💬 Написать в WhatsApp</button>
+          </div>
+          <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
+        </div>
       </section>
 
       <section id="analytics" class="hidden">
@@ -838,7 +858,7 @@ async function enterOnlineApp(user) {
 
   currentRole = profile.role || "seller";
 
-  // v9.3.3: окончание подписки закрывает только доступ. Данные не удаляются.
+  // v9.3.4: окончание подписки закрывает только доступ. Данные не удаляются.
   if(currentRole !== "admin") {
     const {data:sub,error:subError}=await sb.rpc("seller_subscription_status");
     if(subError){
@@ -1038,7 +1058,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.3.3: статус доступа продавцов берём только с сервера Supabase.
+// v9.3.4: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -1479,6 +1499,9 @@ function startApp() {
   refreshAll();
 }
 
+
+function callSupport(){ window.location.href='tel:+79630600609'; }
+function whatsappSupport(){ window.open('https://wa.me/79630600609','_blank','noopener'); }
 
 /* ================================
    NAVIGATION
@@ -4325,7 +4348,6 @@ function selectGlobalSuggestion(name){
   const box=document.getElementById("globalNameSuggestions");
   if(input) input.value=name;
   if(box) box.classList.add("hidden");
-  document.getElementById("globalBirth")?.focus();
 }
 
 document.addEventListener("click",e=>{
@@ -4340,12 +4362,18 @@ document.addEventListener("click",e=>{
 
 async function searchGlobal() {
   const q=normalize(document.getElementById("globalName").value);
-  const birth=document.getElementById("globalBirth").value;
+  const birthText=document.getElementById("globalBirth").value.trim();
+  const birth=birthText ? birthDisplayToIso(birthText) : '';
+  const passportSeries=document.getElementById("globalPassportSeries").value.replace(/\D/g,'');
+  const passportNumber=document.getElementById("globalPassportNumber").value.replace(/\D/g,'');
   const box=document.getElementById("globalResults");
   if(!q){box.innerHTML='<div class="notice">Введите ФИО клиента.</div>';return;}
+  if(birthText && !birth){box.innerHTML='<div class="notice dangerbox">Введите дату рождения в формате ДД.ММ.ГГГГ.</div>';return;}
+  if(passportSeries && passportSeries.length!==4){box.innerHTML='<div class="notice dangerbox">Серия паспорта должна содержать 4 цифры.</div>';return;}
+  if(passportNumber && passportNumber.length!==6){box.innerHTML='<div class="notice dangerbox">Номер паспорта должен содержать 6 цифр.</div>';return;}
   box.innerHTML='<div class="notice">Проверяем общую базу всех продавцов...</div>';
   try{
-    const {data,error}=await sb.rpc("global_client_check_v921",{p_name:q,p_birth:birth||null});
+    const {data,error}=await sb.rpc("global_client_check_v934",{p_name:q,p_birth:birth||null,p_passport_series:passportSeries||null,p_passport_number:passportNumber||null});
     if(error) throw error;
     if(!data?.length){
       box.innerHTML='<div class="empty">Совпадений не найдено. Проверьте хотя бы фамилию и первые буквы имени.</div>';
@@ -4370,7 +4398,7 @@ async function searchGlobal() {
     }
   }catch(e){
     console.error(e);
-    box.innerHTML='<div class="notice dangerbox">Ошибка общей проверки: '+esc(e.message||'неизвестная ошибка')+'. Установите SQL v8.9 в Supabase.</div>';
+    box.innerHTML='<div class="notice dangerbox">Ошибка общей проверки: '+esc(e.message||'неизвестная ошибка')+'. Выполните SQL v9.3.4 в Supabase.</div>';
   }
 }
 
@@ -5018,7 +5046,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.3.3 MOBILE UX ===== */
+/* ===== v9.3.4 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
