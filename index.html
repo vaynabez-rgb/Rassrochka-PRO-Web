@@ -162,7 +162,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.2.7 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.3.0 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.2.7</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.0</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.2.7</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.0</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -230,6 +230,7 @@ th{font-size:13px;color:#68758b}
         <button onclick="showPage('sellerDirectory',this)">Продавцы</button>
         <button onclick="showPage('analytics',this)">Аналитика</button>
         <button onclick="showPage('notifications',this)">Напоминания</button>
+        <button onclick="showPage('trash',this)">Корзина</button>
         <button id="adminMenuBtn" class="hidden" onclick="showPage('adminPanel',this)">Администратор</button>
         <button onclick="showPage('management',this)">Управление</button>
         <button onclick="showPage('settings',this)">Резервная копия</button>
@@ -406,11 +407,12 @@ th{font-size:13px;color:#68758b}
         <div class="card">
           <h2>Добавить в чёрный список</h2>
           <div class="grid3">
-            <div>
-  <label>Быстрый поиск клиента</label>
-  <input id="blackClientSearch" placeholder="Введите ФИО клиента..." oninput="filterBlacklistClients()">
-  <label style="margin-top:8px">Клиент</label>
-  <select id="blackClient"></select>
+            <div style="position:relative">
+  <label>Найти клиента по ФИО</label>
+  <input id="blackClientSearch" placeholder="Введите фамилию, имя или отчество..." autocomplete="off" oninput="filterBlacklistClients()" onfocus="filterBlacklistClients()">
+  <input id="blackClient" type="hidden">
+  <div id="blackClientResults" class="client-search-results hidden"></div>
+  <div id="selectedBlacklistClient" class="notice hidden" style="margin-top:10px"></div>
 </div>
             <div><label>Основание</label><input id="blackReason" placeholder="Причина"></div>
             <div><label>Примечание</label><input id="blackNote"></div>
@@ -455,7 +457,9 @@ th{font-size:13px;color:#68758b}
             <div class="stat">Закупка<strong id="anCost">0 ₽</strong><div class="kpi-note">Только сделки с указанной закупкой</div></div>
             <div class="stat">Расчётная прибыль<strong id="anProfit">0 ₽</strong><div class="kpi-note">Продажа − закупка</div></div>
             <div class="stat">Средняя прибыль<strong id="anAvgProfit">0 ₽</strong><div class="kpi-note">На сделку с закупочной ценой</div></div>
-            <div class="stat">Получено<strong id="anReceived">0 ₽</strong><div class="kpi-note">Платежи за выбранный период</div></div>
+            <div class="stat">Первоначальные взносы<strong id="anDeposits">0 ₽</strong><div class="kpi-note">По сделкам за выбранный период</div></div>
+            <div class="stat">Остальные платежи<strong id="anPayments">0 ₽</strong><div class="kpi-note">Платежи, внесённые за выбранный период</div></div>
+            <div class="stat">Получено всего<strong id="anReceived">0 ₽</strong><div class="kpi-note">Первоначальные взносы + остальные платежи</div></div>
             <div class="stat">К получению<strong id="anRemaining">0 ₽</strong><div class="kpi-note">Текущий остаток</div></div>
             <div class="stat">Просрочено сейчас<strong id="anOverdue">0 ₽</strong><div class="kpi-note">Текущая просрочка</div></div>
           </div>
@@ -487,6 +491,14 @@ th{font-size:13px;color:#68758b}
               <div id="auditLog"></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="trash" class="hidden">
+        <div class="card">
+          <h2>Корзина</h2>
+          <p class="muted">Удалённые записи хранятся 30 дней. Каждый продавец видит только свою корзину. Администратор видит корзины всех продавцов.</p>
+          <div id="trashTable"><div class="empty">Корзина пуста.</div></div>
         </div>
       </section>
 
@@ -659,6 +671,7 @@ function defaultDB() {
     deals: [],
     payments: [],
     blacklist: [],
+    trash: [],
     audit: []
   };
 }
@@ -833,11 +846,15 @@ async function loadServerData() {
     ? sb.from("blacklist").select("*")
     : sb.from("blacklist").select("*").eq("seller_id", currentSellerId);
 
-  const [sr, cr, dr, pr, br] = await Promise.all([
-    profilesQ, clientsQ, dealsQ, paymentsQ, blacklistQ
+  const trashQ = admin
+    ? sb.from("trash_items").select("*").order("deleted_at", {ascending:false})
+    : sb.from("trash_items").select("*").eq("seller_id", currentSellerId).order("deleted_at", {ascending:false});
+
+  const [sr, cr, dr, pr, br, tr] = await Promise.all([
+    profilesQ, clientsQ, dealsQ, paymentsQ, blacklistQ, trashQ
   ]);
 
-  const err=[sr.error,cr.error,dr.error,pr.error,br.error].find(Boolean);
+  const err=[sr.error,cr.error,dr.error,pr.error,br.error,tr.error].find(Boolean);
   if(err){ alert("Ошибка загрузки с сервера: "+err.message); return; }
 
   db = defaultDB();
@@ -877,6 +894,12 @@ async function loadServerData() {
     id:x.id,clientId:x.client_id,addedBySellerId:x.seller_id,
     reason:x.reason||"",note:x.note||"",active:x.active!==false,
     createdAt:x.created_at
+  }));
+
+  db.trash=(tr.data||[]).map(x=>({
+    id:x.id,sellerId:x.seller_id,itemType:x.item_type,itemId:x.item_id,
+    title:x.title||"Удалённая запись",payload:x.payload||{},deletedAt:x.deleted_at,
+    purgeAt:x.purge_at,deletedBy:x.deleted_by
   }));
 
   // Фотографии загружаем в фоне, чтобы вход администратора не ждал
@@ -962,7 +985,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.2.7: статус доступа продавцов берём только с сервера Supabase.
+// v9.3.0: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -1306,6 +1329,7 @@ function showPage(id, btn) {
 
   refreshAll();
   if (id === "sellerDirectory") renderSellerDirectory(true);
+  if (id === "trash") { purgeExpiredTrash().then(()=>renderTrash()); }
 }
 
 
@@ -2930,22 +2954,41 @@ function markDealPaid(id){
 
 async function deletePayment(id){
   const p=db.payments.find(x=>x.id===id);
-  if(!p || p.sellerId!==currentSellerId) return;
-  if(!confirm("Удалить этот платёж?")) return;
+  if(!p || (!isAdmin() && p.sellerId!==currentSellerId)) return;
+  if(!confirm("Переместить этот платёж в корзину? Его можно восстановить в течение 30 дней.")) return;
   const dealId=p.dealId;
+  const d=db.deals.find(x=>x.id===dealId);
+  const sellerId=p.sellerId;
+  const deletedAt=new Date();
+  const purgeAt=new Date(deletedAt.getTime()+30*24*60*60*1000);
+  const trashItem={
+    id:crypto.randomUUID(), sellerId, itemType:"payment", itemId:p.id,
+    title:`Платёж ${money(p.amount)} • ${d?.contractNumber||"рассрочка"}`,
+    payload:{...p}, deletedAt:deletedAt.toISOString(), purgeAt:purgeAt.toISOString(),
+    deletedBy:currentSellerId
+  };
   try {
-    if (serverReady && !isAdmin()) {
-      const {error}=await sb.from("payments").delete().eq("id",id).eq("seller_id",currentSellerId);
-      if(error) throw error;
+    if(serverReady){
+      const {error:trashError}=await sb.from("trash_items").insert({
+        id:trashItem.id,seller_id:sellerId,item_type:"payment",item_id:p.id,
+        title:trashItem.title,payload:trashItem.payload,deleted_by:currentSellerId,
+        deleted_at:trashItem.deletedAt,purge_at:trashItem.purgeAt
+      });
+      if(trashError) throw trashError;
+      let q=sb.from("payments").delete().eq("id",id);
+      if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
+      const {error}=await q;
+      if(error){ await sb.from("trash_items").delete().eq("id",trashItem.id); throw error; }
     }
+    db.trash=db.trash||[]; db.trash.unshift(trashItem);
     db.payments=db.payments.filter(x=>x.id!==id);
-    const d=db.deals.find(x=>x.id===dealId);
     if(d && remaining(d)>0 && d.status!=="cancelled") d.status="active";
-    addAudit("Удалён платёж", `${d?.contractNumber||dealId}: ${money(p.amount)}`);
-    saveDB();
+    addAudit("Платёж перемещён в корзину", `${d?.contractNumber||dealId}: ${money(p.amount)}`);
+    localStorage.setItem(DBKEY,JSON.stringify(db));
+    refreshAll();
     openDealDetails(dealId);
   } catch(error) {
-    alert("Не удалось удалить платёж на сервере: "+(error.message||error));
+    alert("Не удалось переместить платёж в корзину: "+(error.message||error));
   }
 }
 
@@ -3076,13 +3119,16 @@ function renderAnalytics(){
   const avg=withCost.length?profit/withCost.length:0;
   const deposits=periodDeals.reduce((s,d)=>s+Number(d.deposit||0),0);
   const payPeriod=db.payments.filter(p=>(isAdmin()||p.sellerId===currentSellerId)&&inRange(p.date));
-  const received=deposits+payPeriod.reduce((s,p)=>s+Number(p.amount||0),0);
+  const otherPayments=payPeriod.reduce((s,p)=>s+Number(p.amount||0),0);
+  const received=deposits+otherPayments;
   const rem=deals.reduce((s,d)=>s+remaining(d),0);
   const overdue=deals.filter(isOverdue).reduce((s,d)=>s+remaining(d),0);
   document.getElementById("anIssued").textContent=money(issued);
   document.getElementById("anCost").textContent=money(cost);
   document.getElementById("anProfit").textContent=money(profit);
   document.getElementById("anAvgProfit").textContent=money(avg);
+  document.getElementById("anDeposits").textContent=money(deposits);
+  document.getElementById("anPayments").textContent=money(otherPayments);
   document.getElementById("anReceived").textContent=money(received);
   document.getElementById("anRemaining").textContent=money(rem);
   document.getElementById("anOverdue").textContent=money(overdue);
@@ -3871,6 +3917,9 @@ function addBlacklist() {
   document.getElementById(
     "blackNote"
   ).value = "";
+  document.getElementById("blackClient").value = "";
+  document.getElementById("blackClientSearch").value = "";
+  document.getElementById("selectedBlacklistClient")?.classList.add("hidden");
 
 
   saveDB();
@@ -4205,29 +4254,34 @@ document.addEventListener("click", function(e) {
 
 
 function filterBlacklistClients() {
-  const select = document.getElementById("blackClient");
-  const input = document.getElementById("blackClientSearch");
-  if (!select) return;
-
-  const q = normalize(input?.value || "");
-  const oldValue = select.value;
-  const clients = myClients().filter(c => {
-    if (!q) return true;
-    const hay = normalize([
-      fullName(c),
-      c.phone || "",
-      c.passportSeries || "",
-      c.passportNumber || ""
-    ].join(" "));
-    return hay.includes(q);
-  });
-
-  select.innerHTML =
-    '<option value="">Выберите клиента</option>' +
-    clients.map(c => `<option value="${c.id}">${esc(fullName(c))} — ${dateRu(c.birth)}</option>`).join("");
-
-  if ([...select.options].some(o => o.value === oldValue)) select.value = oldValue;
+  const input=document.getElementById("blackClientSearch");
+  const results=document.getElementById("blackClientResults");
+  const hidden=document.getElementById("blackClient");
+  if(!input||!results||!hidden) return;
+  hidden.value="";
+  const selected=document.getElementById("selectedBlacklistClient");
+  if(selected) selected.classList.add("hidden");
+  const q=normalize(input.value);
+  const clients=myClients().filter(c=>{
+    const hay=normalize([fullName(c),c.phone||"",c.birth||""].join(" "));
+    return !q||hay.includes(q);
+  }).slice(0,20);
+  if(!clients.length){ results.innerHTML='<div class="client-search-item">Клиент не найден</div>'; results.classList.remove("hidden"); return; }
+  results.innerHTML=clients.map(c=>`<div class="client-search-item" onclick="selectBlacklistClient('${c.id}')"><strong>${esc(fullName(c))}</strong><small>Дата рождения: ${dateRu(c.birth)}${c.phone?" • "+esc(c.phone):""}</small></div>`).join("");
+  results.classList.remove("hidden");
 }
+function selectBlacklistClient(clientId){
+  const c=myClients().find(x=>x.id===clientId); if(!c)return;
+  document.getElementById("blackClient").value=c.id;
+  document.getElementById("blackClientSearch").value=fullName(c);
+  document.getElementById("blackClientResults").classList.add("hidden");
+  const box=document.getElementById("selectedBlacklistClient");
+  if(box){box.innerHTML=`Выбран: <b>${esc(fullName(c))}</b> • ${dateRu(c.birth)}`;box.classList.remove("hidden");}
+}
+document.addEventListener("click",function(e){
+  const r=document.getElementById("blackClientResults"),i=document.getElementById("blackClientSearch");
+  if(r&&i&&e.target!==i&&!r.contains(e.target)) r.classList.add("hidden");
+});
 
 /* ================================
    SELECTS
@@ -4258,17 +4312,7 @@ function renderSelects() {
       </option>
     `).join("");
 
-  const blackClient = document.getElementById("blackClient");
 
-  if (blackClient) {
-    const oldBlack = blackClient.value;
-    blackClient.innerHTML = options;
-
-    if ([...blackClient.options].some(o => o.value === oldBlack)) {
-      blackClient.value = oldBlack;
-    }
-  }
-  if (document.getElementById("blackClientSearch")?.value) filterBlacklistClients();
 
   // For payments, show only the installments of the selected client.
   const paymentClientId =
@@ -4500,6 +4544,51 @@ function clearAll() {
 
 
 /* ================================
+   TRASH — 30 DAYS
+================================ */
+function trashDaysLeft(item){
+  const end=new Date(item.purgeAt||item.purge_at||0).getTime();
+  return Math.max(0,Math.ceil((end-Date.now())/86400000));
+}
+async function purgeExpiredTrash(){
+  if(!serverReady) return;
+  try{
+    let q=sb.from("trash_items").delete().lte("purge_at",new Date().toISOString());
+    if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
+    const {error}=await q; if(error) throw error;
+    db.trash=(db.trash||[]).filter(x=>new Date(x.purgeAt).getTime()>Date.now());
+  }catch(e){console.warn("Trash purge:",e.message||e);}
+}
+function renderTrash(){
+  const box=document.getElementById("trashTable"); if(!box)return;
+  let arr=(db.trash||[]).filter(x=>isAdmin()||x.sellerId===currentSellerId).sort((a,b)=>String(b.deletedAt).localeCompare(String(a.deletedAt)));
+  if(!arr.length){box.innerHTML='<div class="empty">Корзина пуста.</div>';return;}
+  box.innerHTML=`<div class="admin-table-wrap"><table><thead><tr><th>Что удалено</th>${isAdmin()?'<th>Магазин</th>':''}<th>Дата удаления</th><th>Осталось</th><th></th></tr></thead><tbody>${arr.map(x=>{
+    const shop=db.sellers.find(s=>s.id===x.sellerId)?.shop||'—';
+    return `<tr><td><b>${esc(x.title||'Удалённая запись')}</b><br><small>${x.itemType==='payment'?'Платёж':esc(x.itemType||'Запись')}</small></td>${isAdmin()?`<td>${esc(shop)}</td>`:''}<td>${dateRu(String(x.deletedAt||'').slice(0,10))}</td><td>${trashDaysLeft(x)} дн.</td><td><button class="btn primary" onclick="restoreTrashItem('${x.id}')">Восстановить</button></td></tr>`;
+  }).join('')}</tbody></table></div>`;
+}
+async function restoreTrashItem(id){
+  const item=(db.trash||[]).find(x=>x.id===id); if(!item)return;
+  if(!isAdmin()&&item.sellerId!==currentSellerId)return;
+  if(item.itemType!=="payment"){alert("Восстановление этого типа записи пока не требуется в текущей версии.");return;}
+  const p=item.payload||{};
+  if(!db.deals.some(d=>d.id===p.dealId)){alert("Нельзя восстановить платёж: связанная рассрочка не найдена.");return;}
+  try{
+    if(serverReady){
+      const {error}=await sb.from("payments").upsert({id:p.id,seller_id:item.sellerId,deal_id:p.dealId,amount:Number(p.amount||0),payment_date:p.date,note:p.note||null},{onConflict:"id"});
+      if(error)throw error;
+      const {error:delError}=await sb.from("trash_items").delete().eq("id",id); if(delError)throw delError;
+    }
+    if(!db.payments.some(x=>x.id===p.id)) db.payments.push({...p,sellerId:item.sellerId});
+    db.trash=db.trash.filter(x=>x.id!==id);
+    addAudit("Платёж восстановлен из корзины",item.title||p.id);
+    localStorage.setItem(DBKEY,JSON.stringify(db)); refreshAll();
+    alert("Платёж восстановлен.");
+  }catch(e){alert("Не удалось восстановить запись: "+(e.message||e));}
+}
+
+/* ================================
    REFRESH
 ================================ */
 
@@ -4534,6 +4623,8 @@ function refreshAll() {
   renderAdminPanel();
 
   renderNotifications();
+
+  renderTrash();
 
   renderManagement();
 
@@ -4684,7 +4775,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.2.7 MOBILE UX ===== */
+/* ===== v9.3.0 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
