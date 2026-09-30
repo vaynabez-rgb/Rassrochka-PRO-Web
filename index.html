@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.3.4</title>
+<title>Рассрочка PRO v9.3.5</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -154,15 +154,15 @@ th{font-size:13px;color:#68758b}
   .sidebar.mobile-open{transform:translateX(0)}
   .menu{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;min-width:0!important}
   .menu button{width:100%!important;min-width:0!important;max-width:none!important;text-align:left!important;padding:12px 14px!important;font-size:14px!important;white-space:normal!important}
-  .mobile-nav-toggle{display:flex;position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px) + 78px);z-index:990;width:48px;height:48px;border:0;border-radius:16px;background:#246bfd;color:#fff;align-items:center;justify-content:center;font-size:25px;font-weight:800;box-shadow:0 8px 24px rgba(36,107,253,.32);cursor:pointer}
-  .mobile-nav-toggle.menu-open{left:min(calc(82vw - 48px),232px);background:#13213a}
+  .mobile-nav-toggle{display:flex;position:fixed;left:0;top:calc(env(safe-area-inset-top,0px) + 78px);z-index:990;width:46px;height:52px;border:0;border-radius:0 16px 16px 0;background:#246bfd;color:#fff;align-items:center;justify-content:center;font-size:25px;font-weight:800;box-shadow:0 8px 24px rgba(36,107,253,.32);cursor:pointer}
+  .mobile-nav-toggle.menu-open{left:min(calc(82vw - 48px),232px);border-radius:14px;background:#13213a}
   .mobile-nav-backdrop{position:fixed;inset:0;background:rgba(9,18,33,.34);z-index:970}
   .mobile-nav-backdrop.show{display:block}
   main{padding-bottom:18px!important}
 }
 
 
-/* ===== v9.3.4 MOBILE CARD UI / SAFE AREAS ===== */
+/* ===== v9.3.5 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
 .today-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .today-summary>div{background:#fff;border-radius:14px;padding:16px;box-shadow:0 5px 20px rgba(20,40,80,.06)}
@@ -198,7 +198,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.4</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.5</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -213,7 +213,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.4</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.5</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -458,7 +458,7 @@ th{font-size:13px;color:#68758b}
           <p class="muted">Если возник вопрос или проблема с приложением, свяжитесь с поддержкой.</p>
           <div class="info-grid" style="margin-top:18px">
             <div class="info-box"><b>Телефон поддержки</b><br>8 963 060-06-09</div>
-            <div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.4</div>
+            <div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.5</div>
           </div>
           <div class="row-actions" style="margin-top:18px">
             <button class="btn primary" onclick="callSupport()">📞 Позвонить в поддержку</button>
@@ -857,7 +857,7 @@ async function enterOnlineApp(user) {
 
   currentRole = profile.role || "seller";
 
-  // v9.3.4: окончание подписки закрывает только доступ. Данные не удаляются.
+  // v9.3.5: окончание подписки закрывает только доступ. Данные не удаляются.
   if(currentRole !== "admin") {
     const {data:sub,error:subError}=await sb.rpc("seller_subscription_status");
     if(subError){
@@ -1057,7 +1057,7 @@ async function syncClientPhotosToStorage(client, oldPhotos, newPhotos){
 
 
 
-// v9.3.4: статус доступа продавцов берём только с сервера Supabase.
+// v9.3.5: статус доступа продавцов берём только с сервера Supabase.
 // localStorage больше не используется, поэтому ПК и телефон показывают один статус.
 let sellerAccessStates = {};
 let sellerAccessStatusesLoaded = false;
@@ -4371,7 +4371,7 @@ async function searchGlobal() {
   if(passportNumber && passportNumber.length!==6){box.innerHTML='<div class="notice dangerbox">Номер паспорта должен содержать 6 цифр.</div>';return;}
   box.innerHTML='<div class="notice">Проверяем общую базу всех продавцов...</div>';
   try{
-    const {data,error}=await sb.rpc("global_client_check_v934",{p_name:q,p_birth:birth||null,p_passport_series:passportSeries||null,p_passport_number:passportNumber||null});
+    const {data,error}=await sb.rpc("global_client_check_v935",{p_name:q,p_birth:birth||null,p_passport_series:passportSeries||null,p_passport_number:passportNumber||null});
     if(error) throw error;
     if(!data?.length){
       box.innerHTML='<div class="empty">Совпадений не найдено. Проверьте хотя бы фамилию и первые буквы имени.</div>';
@@ -4396,7 +4396,7 @@ async function searchGlobal() {
     }
   }catch(e){
     console.error(e);
-    box.innerHTML='<div class="notice dangerbox">Ошибка общей проверки: '+esc(e.message||'неизвестная ошибка')+'. Выполните SQL v9.3.4 в Supabase.</div>';
+    box.innerHTML='<div class="notice dangerbox">Ошибка общей проверки: '+esc(e.message||'неизвестная ошибка')+'. Выполните SQL v9.3.5 в Supabase.</div>';
   }
 }
 
@@ -5044,7 +5044,7 @@ if(document.querySelector('.menu')){
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
 
-/* ===== v9.3.4 MOBILE UX ===== */
+/* ===== v9.3.5 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
   if(window.innerWidth>700) return;
   root.querySelectorAll('table').forEach(table=>{
