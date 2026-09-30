@@ -146,21 +146,28 @@ th{font-size:13px;color:#68758b}
 /* ===== v8: 30-in-1 dashboard upgrade ===== */
 .v8-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v8-tabs button{border:1px solid #d7dfeb;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.v8-tabs button.active{background:#246bfd;color:#fff;border-color:#246bfd}.v8-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v8-panel{background:#f7f9fc;border:1px solid #e5eaf2;border-radius:12px;padding:13px}.v8-big{font-size:22px;font-weight:800;margin-top:5px}.v8-search{display:flex;gap:8px;flex-wrap:wrap}.v8-search input{flex:1;min-width:220px}.v8-client-folder{border:1px solid #e3e9f2;border-radius:12px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}.v8-client-folder:hover{background:#f5f8ff}.v8-overdue{border-left:4px solid #d83a3a}.v8-ok{border-left:4px solid #18a864}@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-tabs{overflow-x:auto;flex-wrap:nowrap}.v8-tabs button{white-space:nowrap}}
 
-/* ===== MOBILE FLOATING LEFT NAV ===== */
+/* ===== v9.3.6 FULL-HEIGHT MOBILE SIDE NAV ===== */
 .mobile-nav-toggle,.mobile-nav-backdrop{display:none}
 @media(max-width:700px){
+  :root{--mobile-rail:15vw;--mobile-open:70vw}
   body{padding-bottom:0!important}
-  .sidebar{position:fixed!important;left:12px!important;right:auto!important;top:calc(env(safe-area-inset-top,0px) + 76px)!important;bottom:auto!important;width:min(280px,82vw)!important;max-height:calc(100vh - 100px - env(safe-area-inset-bottom,0px))!important;padding:12px!important;border:0!important;border-radius:18px!important;overflow-y:auto!important;overflow-x:hidden!important;box-shadow:0 14px 40px rgba(10,20,40,.28)!important;transform:translateX(calc(-100% - 28px));transition:transform .22s ease;z-index:980!important}
-  .sidebar.mobile-open{transform:translateX(0)}
-  .menu{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;min-width:0!important}
-  .menu button{width:100%!important;min-width:0!important;max-width:none!important;text-align:left!important;padding:12px 14px!important;font-size:14px!important;white-space:normal!important}
-  .mobile-nav-toggle{display:flex;position:fixed;left:0;top:calc(env(safe-area-inset-top,0px) + 78px);z-index:990;width:46px;height:52px;border:0;border-radius:0 16px 16px 0;background:#246bfd;color:#fff;align-items:center;justify-content:center;font-size:25px;font-weight:800;box-shadow:0 8px 24px rgba(36,107,253,.32);cursor:pointer}
-  .mobile-nav-toggle.menu-open{left:min(calc(82vw - 48px),232px);border-radius:14px;background:#13213a}
-  .mobile-nav-backdrop{position:fixed;inset:0;background:rgba(9,18,33,.34);z-index:970}
-  .mobile-nav-backdrop.show{display:block}
-  main{padding-bottom:18px!important}
+  .layout{display:block!important}
+  .sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;right:auto!important;width:var(--mobile-rail)!important;height:100dvh!important;max-height:none!important;padding:calc(env(safe-area-inset-top,0px) + 74px) 7px calc(env(safe-area-inset-bottom,0px) + 10px)!important;border:0!important;border-radius:0!important;overflow-y:auto!important;overflow-x:hidden!important;background:#13213a!important;box-shadow:4px 0 18px rgba(10,20,40,.16)!important;transform:none!important;transition:width .22s ease,padding .22s ease;z-index:980!important}
+  .sidebar.mobile-open{width:var(--mobile-open)!important;padding-left:12px!important;padding-right:12px!important;box-shadow:12px 0 35px rgba(10,20,40,.30)!important}
+  .menu{display:grid!important;grid-template-columns:1fr!important;gap:5px!important;width:100%!important;min-width:0!important}
+  .menu button{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:48px!important;padding:0!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:0!important;white-space:nowrap!important;overflow:hidden!important;color:#dbe5f5!important;background:transparent!important}
+  .menu button::before{font-size:21px!important;line-height:1!important;flex:0 0 28px;text-align:center}
+  .menu button:nth-child(1)::before{content:'⌂'}.menu button:nth-child(2)::before{content:'♟'}.menu button:nth-child(3)::before{content:'▤'}.menu button:nth-child(4)::before{content:'▣'}.menu button:nth-child(5)::before{content:'◷'}.menu button:nth-child(6)::before{content:'✓'}.menu button:nth-child(7)::before{content:'◆'}.menu button:nth-child(8)::before{content:'⌕'}.menu button:nth-child(9)::before{content:'♟'}.menu button:nth-child(10)::before{content:'◉'}.menu button:nth-child(11)::before{content:'▥'}.menu button:nth-child(12)::before{content:'♟'}.menu button:nth-child(13)::before{content:'▾'}.menu button:nth-child(14)::before{content:'★'}.menu button:nth-child(15)::before{content:'⚙'}.menu button:nth-child(16)::before{content:'▰'}
+  .menu button.active{background:#246bfd!important;color:#fff!important;box-shadow:0 5px 14px rgba(36,107,253,.28)!important}
+  .sidebar.mobile-open .menu button{justify-content:flex-start!important;gap:10px!important;padding:0 14px!important;font-size:15px!important}
+  .sidebar.mobile-open .menu button::before{font-size:20px!important}
+  .mobile-nav-toggle{display:flex!important;position:fixed!important;left:0!important;top:calc(env(safe-area-inset-top,0px) + 12px)!important;z-index:995!important;width:var(--mobile-rail)!important;height:48px!important;border:0!important;border-radius:0!important;background:#13213a!important;color:#fff!important;align-items:center!important;justify-content:center!important;font-size:24px!important;font-weight:800!important;box-shadow:none!important;cursor:pointer!important;transition:width .22s ease!important}
+  .mobile-nav-toggle.menu-open{left:0!important;width:var(--mobile-open)!important;border-radius:0!important;background:#13213a!important;justify-content:flex-end!important;padding-right:18px!important}
+  .mobile-nav-backdrop{position:fixed!important;left:var(--mobile-open)!important;right:0!important;top:0!important;bottom:0!important;background:rgba(9,18,33,.34)!important;z-index:970!important}
+  .mobile-nav-backdrop.show{display:block!important}
+  .topbar{margin-left:var(--mobile-rail)!important;width:calc(100% - var(--mobile-rail))!important}
+  main{margin-left:var(--mobile-rail)!important;width:calc(100% - var(--mobile-rail))!important;max-width:calc(100% - var(--mobile-rail))!important;padding-bottom:18px!important;transition:none!important}
 }
-
 
 /* ===== v9.3.5 MOBILE CARD UI / SAFE AREAS ===== */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
@@ -173,9 +180,9 @@ th{font-size:13px;color:#68758b}
  body{padding-bottom:var(--safe-bottom)!important}
  .topbar{padding-top:calc(10px + var(--safe-top))!important;min-height:calc(64px + var(--safe-top));flex-wrap:wrap}
  .topbar>div:last-child{display:flex;align-items:center;gap:5px;flex-wrap:wrap}.topbar .btn{min-height:36px;padding:7px 10px}
- .mobile-nav-toggle{top:calc(var(--safe-top) + 82px)!important}
- .sidebar{top:calc(var(--safe-top) + 80px)!important;max-height:calc(100dvh - var(--safe-top) - 100px - var(--safe-bottom))!important}
- main{width:100%;max-width:100%;overflow:hidden;padding:12px 10px calc(18px + var(--safe-bottom))!important}
+ .mobile-nav-toggle{top:calc(var(--safe-top) + 12px)!important}
+ .sidebar{top:0!important;max-height:none!important}
+ main{overflow:hidden;padding:12px 10px calc(18px + var(--safe-bottom))!important}
  .today-summary{grid-template-columns:1fr;gap:8px;margin-bottom:12px}.today-summary>div{padding:13px}.today-summary strong{font-size:20px}
  .mobile-quick-search{display:grid;grid-template-columns:1fr auto}.mobile-quick-search .btn{padding-left:12px;padding-right:12px}
  .card:has(table),.admin-table-wrap,.seller-tab-content,[data-v8tab]{overflow:visible!important}
@@ -213,7 +220,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.5</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.6</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
