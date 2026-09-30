@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.3.6</title>
+<title>Рассрочка PRO v9.3.7</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -146,7 +146,7 @@ th{font-size:13px;color:#68758b}
 /* ===== v8: 30-in-1 dashboard upgrade ===== */
 .v8-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v8-tabs button{border:1px solid #d7dfeb;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.v8-tabs button.active{background:#246bfd;color:#fff;border-color:#246bfd}.v8-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v8-panel{background:#f7f9fc;border:1px solid #e5eaf2;border-radius:12px;padding:13px}.v8-big{font-size:22px;font-weight:800;margin-top:5px}.v8-search{display:flex;gap:8px;flex-wrap:wrap}.v8-search input{flex:1;min-width:220px}.v8-client-folder{border:1px solid #e3e9f2;border-radius:12px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}.v8-client-folder:hover{background:#f5f8ff}.v8-overdue{border-left:4px solid #d83a3a}.v8-ok{border-left:4px solid #18a864}@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-tabs{overflow-x:auto;flex-wrap:nowrap}.v8-tabs button{white-space:nowrap}}
 
-/* ===== v9.3.6 FULL-HEIGHT MOBILE SIDE NAV ===== */
+/* ===== v9.3.7 FULL-HEIGHT MOBILE SIDE NAV ===== */
 .mobile-nav-toggle,.mobile-nav-backdrop{display:none}
 @media(max-width:700px){
   :root{--mobile-rail:15vw;--mobile-open:70vw}
@@ -205,7 +205,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.6</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.7</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -220,7 +220,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.6</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.7</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -460,17 +460,13 @@ th{font-size:13px;color:#68758b}
       </section>
 
       <section id="support" class="hidden">
-        <div class="card" style="max-width:760px">
-          <h2>Поддержка</h2>
-          <p class="muted">Если возник вопрос или проблема с приложением, свяжитесь с поддержкой.</p>
-          <div class="info-grid" style="margin-top:18px">
-            <div class="info-box"><b>Телефон поддержки</b><br><a href="tel:+79630600609">8 963 060-06-09</a></div>
-            <div class="info-box"><b>E-mail поддержки</b><br><a href="mailto:rassrochka.pro95@bk.ru">rassrochka.pro95@bk.ru</a></div>
-            <div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.6</div>
+        <div class="card" style="max-width:900px">
+          <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+            <div><h2 style="margin-bottom:6px">Поддержка</h2><p class="muted" style="margin:0">Если возник вопрос или проблема с приложением, свяжитесь с поддержкой.</p></div>
+            <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
-          <div class="row-actions" style="margin-top:18px">
-            <button class="btn primary" onclick="callSupport()">📞 Позвонить в поддержку</button>
-          </div>
+          <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.7</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
@@ -1507,7 +1503,56 @@ function startApp() {
 }
 
 
-function callSupport(){ window.location.href='tel:+79630600609'; }
+let supportContacts=[];
+function supportHref(type,value){
+  const v=String(value||'').trim();
+  if(type==='phone') return 'tel:'+v.replace(/[^+\d]/g,'');
+  if(type==='email') return 'mailto:'+v;
+  if(type==='telegram') return v.startsWith('http')?v:'https://t.me/'+v.replace(/^@/,'');
+  if(type==='whatsapp') return v.startsWith('http')?v:'https://wa.me/'+v.replace(/[^\d]/g,'');
+  if(type==='instagram') return v.startsWith('http')?v:'https://instagram.com/'+v.replace(/^@/,'');
+  if(type==='website'||type==='link') return /^https?:\/\//i.test(v)?v:'https://'+v;
+  return '';
+}
+function supportTypeName(t){ return ({phone:'Телефон',email:'E-mail',telegram:'Telegram',whatsapp:'WhatsApp',instagram:'Instagram',website:'Сайт',link:'Ссылка',address:'Адрес',text:'Другое'})[t]||'Контакт'; }
+function renderSupportContacts(){
+  const box=document.getElementById('supportContacts'); if(!box)return;
+  document.getElementById('supportAddBtn')?.classList.toggle('hidden',!isAdmin());
+  if(!supportContacts.length){box.innerHTML='<div class="notice">Контакты поддержки пока не добавлены.</div>';return;}
+  box.innerHTML=supportContacts.map(c=>{
+    const href=supportHref(c.contact_type,c.value);
+    const val=href?`<a href="${esc(href)}" ${['telegram','whatsapp','instagram','website','link'].includes(c.contact_type)?'target="_blank" rel="noopener"':''}>${esc(c.value)}</a>`:esc(c.value);
+    return `<div class="info-box"><b>${esc(c.label||supportTypeName(c.contact_type))}</b><br>${val}${isAdmin()?`<div class="row-actions" style="margin-top:10px"><button class="btn graybtn" onclick="editSupportContact('${c.id}')">Изменить</button><button class="btn danger" onclick="deleteSupportContact('${c.id}')">Удалить</button></div>`:''}</div>`;
+  }).join('');
+}
+async function loadSupportContacts(){
+  const {data,error}=await sb.from('support_contacts').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:true});
+  if(error){console.error(error); supportContacts=[];} else supportContacts=data||[];
+  renderSupportContacts();
+}
+async function addSupportContact(){
+  if(!isAdmin())return;
+  const type=(prompt('Тип: phone, email, telegram, whatsapp, instagram, website, link, address или text','phone')||'').trim().toLowerCase();
+  if(!['phone','email','telegram','whatsapp','instagram','website','link','address','text'].includes(type)){alert('Неверный тип контакта.');return;}
+  const label=(prompt('Название контакта',supportTypeName(type))||'').trim(); if(!label)return;
+  const value=(prompt('Введите значение')||'').trim(); if(!value)return;
+  const {error}=await sb.from('support_contacts').insert({contact_type:type,label,value,sort_order:supportContacts.length*10});
+  if(error){alert('Не удалось добавить: '+error.message);return;} await loadSupportContacts();
+}
+async function editSupportContact(id){
+  if(!isAdmin())return; const c=supportContacts.find(x=>x.id===id); if(!c)return;
+  const type=(prompt('Тип: phone, email, telegram, whatsapp, instagram, website, link, address или text',c.contact_type)||'').trim().toLowerCase();
+  if(!['phone','email','telegram','whatsapp','instagram','website','link','address','text'].includes(type)){alert('Неверный тип контакта.');return;}
+  const label=(prompt('Название контакта',c.label)||'').trim(); if(!label)return;
+  const value=(prompt('Введите значение',c.value)||'').trim(); if(!value)return;
+  const {error}=await sb.from('support_contacts').update({contact_type:type,label,value,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Не удалось изменить: '+error.message);return;} await loadSupportContacts();
+}
+async function deleteSupportContact(id){
+  if(!isAdmin()||!confirm('Удалить этот контакт поддержки?'))return;
+  const {error}=await sb.from('support_contacts').delete().eq('id',id);
+  if(error){alert('Не удалось удалить: '+error.message);return;} await loadSupportContacts();
+}
 
 /* ================================
    NAVIGATION
@@ -1538,6 +1583,7 @@ function showPage(id, btn) {
 
   refreshAll();
   if (id === "sellerDirectory") renderSellerDirectory(true);
+  if (id === "support") loadSupportContacts();
   if (id === "trash") { purgeExpiredTrash().then(()=>renderTrash()); }
 }
 
