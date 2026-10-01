@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.3.7</title>
+<title>Рассрочка PRO v9.3.8</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -146,27 +146,25 @@ th{font-size:13px;color:#68758b}
 /* ===== v8: 30-in-1 dashboard upgrade ===== */
 .v8-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v8-tabs button{border:1px solid #d7dfeb;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.v8-tabs button.active{background:#246bfd;color:#fff;border-color:#246bfd}.v8-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v8-panel{background:#f7f9fc;border:1px solid #e5eaf2;border-radius:12px;padding:13px}.v8-big{font-size:22px;font-weight:800;margin-top:5px}.v8-search{display:flex;gap:8px;flex-wrap:wrap}.v8-search input{flex:1;min-width:220px}.v8-client-folder{border:1px solid #e3e9f2;border-radius:12px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}.v8-client-folder:hover{background:#f5f8ff}.v8-overdue{border-left:4px solid #d83a3a}.v8-ok{border-left:4px solid #18a864}@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-tabs{overflow-x:auto;flex-wrap:nowrap}.v8-tabs button{white-space:nowrap}}
 
-/* ===== v9.3.7 FULL-HEIGHT MOBILE SIDE NAV ===== */
+/* ===== v9.3.8 MOBILE DRAWER NAV: HIDDEN WHEN CLOSED ===== */
 .mobile-nav-toggle,.mobile-nav-backdrop{display:none}
 @media(max-width:700px){
-  :root{--mobile-rail:15vw;--mobile-open:70vw}
+  :root{--mobile-open:70vw}
   body{padding-bottom:0!important}
   .layout{display:block!important}
-  .sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;right:auto!important;width:var(--mobile-rail)!important;height:100dvh!important;max-height:none!important;padding:calc(env(safe-area-inset-top,0px) + 74px) 7px calc(env(safe-area-inset-bottom,0px) + 10px)!important;border:0!important;border-radius:0!important;overflow-y:auto!important;overflow-x:hidden!important;background:#13213a!important;box-shadow:4px 0 18px rgba(10,20,40,.16)!important;transform:none!important;transition:width .22s ease,padding .22s ease;z-index:980!important}
-  .sidebar.mobile-open{width:var(--mobile-open)!important;padding-left:12px!important;padding-right:12px!important;box-shadow:12px 0 35px rgba(10,20,40,.30)!important}
+  .sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;right:auto!important;width:var(--mobile-open)!important;height:100dvh!important;max-height:none!important;padding:calc(env(safe-area-inset-top,0px) + 68px) 12px calc(env(safe-area-inset-bottom,0px) + 10px)!important;border:0!important;border-radius:0!important;overflow-y:auto!important;overflow-x:hidden!important;background:#13213a!important;box-shadow:12px 0 35px rgba(10,20,40,.30)!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;z-index:980!important}
+  .sidebar.mobile-open{transform:translateX(0)!important}
   .menu{display:grid!important;grid-template-columns:1fr!important;gap:5px!important;width:100%!important;min-width:0!important}
-  .menu button{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:48px!important;padding:0!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:0!important;white-space:nowrap!important;overflow:hidden!important;color:#dbe5f5!important;background:transparent!important}
-  .menu button::before{font-size:21px!important;line-height:1!important;flex:0 0 28px;text-align:center}
+  .menu button{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:48px!important;padding:0 14px!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;font-size:15px!important;white-space:nowrap!important;overflow:hidden!important;color:#dbe5f5!important;background:transparent!important}
+  .menu button::before{font-size:20px!important;line-height:1!important;flex:0 0 28px;text-align:center}
   .menu button:nth-child(1)::before{content:'⌂'}.menu button:nth-child(2)::before{content:'♟'}.menu button:nth-child(3)::before{content:'▤'}.menu button:nth-child(4)::before{content:'▣'}.menu button:nth-child(5)::before{content:'◷'}.menu button:nth-child(6)::before{content:'✓'}.menu button:nth-child(7)::before{content:'◆'}.menu button:nth-child(8)::before{content:'⌕'}.menu button:nth-child(9)::before{content:'♟'}.menu button:nth-child(10)::before{content:'◉'}.menu button:nth-child(11)::before{content:'▥'}.menu button:nth-child(12)::before{content:'♟'}.menu button:nth-child(13)::before{content:'▾'}.menu button:nth-child(14)::before{content:'★'}.menu button:nth-child(15)::before{content:'⚙'}.menu button:nth-child(16)::before{content:'▰'}
   .menu button.active{background:#246bfd!important;color:#fff!important;box-shadow:0 5px 14px rgba(36,107,253,.28)!important}
-  .sidebar.mobile-open .menu button{justify-content:flex-start!important;gap:10px!important;padding:0 14px!important;font-size:15px!important}
-  .sidebar.mobile-open .menu button::before{font-size:20px!important}
-  .mobile-nav-toggle{display:flex!important;position:fixed!important;left:0!important;top:calc(env(safe-area-inset-top,0px) + 12px)!important;z-index:995!important;width:var(--mobile-rail)!important;height:48px!important;border:0!important;border-radius:0!important;background:#13213a!important;color:#fff!important;align-items:center!important;justify-content:center!important;font-size:24px!important;font-weight:800!important;box-shadow:none!important;cursor:pointer!important;transition:width .22s ease!important}
-  .mobile-nav-toggle.menu-open{left:0!important;width:var(--mobile-open)!important;border-radius:0!important;background:#13213a!important;justify-content:flex-end!important;padding-right:18px!important}
+  .mobile-nav-toggle{display:flex!important;position:fixed!important;left:10px!important;top:calc(env(safe-area-inset-top,0px) + 10px)!important;z-index:995!important;width:44px!important;height:44px!important;border:1px solid #dfe6f1!important;border-radius:10px!important;background:#fff!important;color:#13213a!important;align-items:center!important;justify-content:center!important;font-size:24px!important;font-weight:800!important;box-shadow:0 3px 12px rgba(10,20,40,.12)!important;cursor:pointer!important}
+  .mobile-nav-toggle.menu-open{left:calc(var(--mobile-open) - 54px)!important;background:#13213a!important;color:#fff!important;border-color:rgba(255,255,255,.15)!important;box-shadow:none!important}
   .mobile-nav-backdrop{position:fixed!important;left:var(--mobile-open)!important;right:0!important;top:0!important;bottom:0!important;background:rgba(9,18,33,.34)!important;z-index:970!important}
   .mobile-nav-backdrop.show{display:block!important}
-  .topbar{margin-left:var(--mobile-rail)!important;width:calc(100% - var(--mobile-rail))!important}
-  main{margin-left:var(--mobile-rail)!important;width:calc(100% - var(--mobile-rail))!important;max-width:calc(100% - var(--mobile-rail))!important;padding-bottom:18px!important;transition:none!important}
+  .topbar{margin-left:0!important;width:100%!important;padding-left:64px!important}
+  main{margin-left:0!important;width:100%!important;max-width:100%!important;padding-bottom:18px!important}
 }
 
 /* ===== v9.3.5 MOBILE CARD UI / SAFE AREAS ===== */
@@ -205,7 +203,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.7</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.3.8</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -220,7 +218,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.7</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.8</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -466,7 +464,7 @@ th{font-size:13px;color:#68758b}
             <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
           <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
-          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.7</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.8</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
