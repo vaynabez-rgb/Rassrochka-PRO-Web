@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.3.9</title>
+<title>Рассрочка PRO v9.4.1</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -146,7 +146,7 @@ th{font-size:13px;color:#68758b}
 /* ===== v8: 30-in-1 dashboard upgrade ===== */
 .v8-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v8-tabs button{border:1px solid #d7dfeb;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.v8-tabs button.active{background:#246bfd;color:#fff;border-color:#246bfd}.v8-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v8-panel{background:#f7f9fc;border:1px solid #e5eaf2;border-radius:12px;padding:13px}.v8-big{font-size:22px;font-weight:800;margin-top:5px}.v8-search{display:flex;gap:8px;flex-wrap:wrap}.v8-search input{flex:1;min-width:220px}.v8-client-folder{border:1px solid #e3e9f2;border-radius:12px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}.v8-client-folder:hover{background:#f5f8ff}.v8-overdue{border-left:4px solid #d83a3a}.v8-ok{border-left:4px solid #18a864}@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-tabs{overflow-x:auto;flex-wrap:nowrap}.v8-tabs button{white-space:nowrap}}
 
-/* ===== v9.3.9 MOBILE DRAWER NAV: HIDDEN WHEN CLOSED ===== */
+/* ===== v9.4.1 MOBILE DRAWER NAV: HIDDEN WHEN CLOSED ===== */
 .mobile-nav-toggle,.mobile-nav-backdrop{display:none}
 @media(max-width:700px){
   :root{--mobile-open:70vw}
@@ -196,6 +196,169 @@ th{font-size:13px;color:#68758b}
  .modal-card table{min-width:0!important}
 }
 
+
+/* ===== v9.4.1 VISUAL REDESIGN ===== */
+:root{
+  --v940-blue:#0878ff;--v940-blue2:#13b8f5;--v940-navy:#071d3c;
+  --v940-green:#13b86b;--v940-purple:#6d42e8;--v940-red:#f43f5e;
+  --v940-orange:#ff9f1c;--v940-bg:#eef7ff;
+}
+body{
+  background:
+    radial-gradient(circle at 18% 0%,rgba(84,190,255,.18),transparent 28%),
+    radial-gradient(circle at 90% 12%,rgba(65,148,255,.14),transparent 24%),
+    linear-gradient(180deg,#f7fbff 0,#edf6ff 100%);
+  color:#10213c;
+}
+.topbar{
+  background:rgba(255,255,255,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(167,199,230,.38);
+  box-shadow:0 8px 28px rgba(20,79,140,.07);
+}
+.brand{font-weight:900;letter-spacing:-.4px;background:linear-gradient(90deg,#10213c,#0878ff 58%,#14b9f5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card,.stat,.today-summary>div,.login-card,.modal-card{
+  border:1px solid rgba(197,219,240,.68);
+  box-shadow:0 10px 28px rgba(34,86,138,.08);
+}
+.card,.stat,.today-summary>div{border-radius:20px}
+.btn{border-radius:13px}
+.primary{background:linear-gradient(135deg,#0878ff,#1769ff);box-shadow:0 7px 16px rgba(8,120,255,.18)}
+.graybtn{background:#eef4fb;color:#183252}
+input,select,textarea{border-radius:14px;border-color:#cfdfef;background:rgba(255,255,255,.94)}
+.sidebar{background:linear-gradient(180deg,#0a2143,#07172f)}
+.menu button{border-radius:14px}
+.menu button.active,.menu button:hover{background:linear-gradient(135deg,#0878ff,#12b9f4);box-shadow:0 7px 18px rgba(8,120,255,.25)}
+.v940-hero{
+  min-height:230px;margin:0 0 18px;border-radius:28px;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:space-between;padding:34px 40px;
+  color:#fff;background:
+    radial-gradient(circle at 76% 35%,rgba(37,188,255,.65),transparent 23%),
+    radial-gradient(circle at 90% 80%,rgba(38,106,255,.55),transparent 26%),
+    linear-gradient(135deg,#061a37 0%,#07386f 50%,#0b83db 100%);
+  box-shadow:0 18px 38px rgba(7,58,112,.18);
+}
+.v940-hero:before,.v940-hero:after{content:"";position:absolute;left:-5%;right:-5%;height:90px;bottom:-35px;background:rgba(255,255,255,.08);clip-path:polygon(0 85%,16% 28%,28% 70%,43% 12%,56% 75%,71% 26%,84% 72%,100% 18%,100% 100%,0 100%)}
+.v940-hero:after{bottom:-50px;opacity:.6;transform:scaleX(-1)}
+.v940-hero-copy{position:relative;z-index:2}
+.v940-hero-title{font-size:42px;line-height:.98;font-weight:900;letter-spacing:-1.2px}.v940-hero-title span{color:#39a9ff}
+.v940-hero-sub{font-size:20px;line-height:1.25;margin-top:18px;color:#eaf6ff}
+.v940-hero-art{position:relative;width:310px;height:170px;z-index:2}
+.v940-phone{position:absolute;right:42px;top:0;width:102px;height:164px;border:7px solid #d7ebff;border-radius:24px;background:linear-gradient(155deg,#1a61ff,#13c0f2);transform:rotate(8deg);display:flex;align-items:center;justify-content:center;font-size:55px;font-weight:900;box-shadow:0 20px 30px rgba(0,0,0,.25)}
+.v940-card-art{position:absolute;right:100px;bottom:12px;width:170px;height:105px;border-radius:20px;background:linear-gradient(135deg,#0b7cff,#174fe5);transform:rotate(-7deg);display:flex;align-items:center;justify-content:center;font-size:54px;font-weight:900;box-shadow:0 18px 30px rgba(0,0,0,.22)}
+#sellerSubscriptionBanner{border-color:#76d8ad!important;background:linear-gradient(135deg,#effff7,#eefbf8)!important;color:#0b6946!important;box-shadow:0 8px 22px rgba(19,184,107,.09)}
+.stats{gap:16px}.stat{position:relative;min-height:120px;padding:22px 22px 18px 86px;overflow:hidden}
+.stat:before{position:absolute;left:20px;top:23px;width:50px;height:50px;border-radius:15px;display:grid;place-items:center;color:#fff;font-size:25px;font-weight:900;box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.stat:nth-child(1):before{content:"♟";background:linear-gradient(135deg,#20a7ff,#075be7)}
+.stat:nth-child(2):before{content:"▣";background:linear-gradient(135deg,#4ade80,#059669)}
+.stat:nth-child(3):before{content:"◷";background:linear-gradient(135deg,#9b6cff,#5b27d9)}
+.stat:nth-child(4):before{content:"×";background:linear-gradient(135deg,#ff667b,#e91643)}
+.stat strong{font-size:32px}
+.today-summary{gap:14px}
+.today-summary>div{position:relative;padding:20px 22px 20px 76px;min-height:92px}
+.today-summary>div:before{position:absolute;left:18px;top:20px;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-size:22px;font-weight:900}
+.today-summary>div:nth-child(1){background:linear-gradient(135deg,#062b5a,#0876d8);color:#fff}
+.today-summary>div:nth-child(1) span{color:#d9efff}.today-summary>div:nth-child(1):before{content:"▰";background:linear-gradient(135deg,#39c4ff,#0878ff)}
+.today-summary>div:nth-child(2):before{content:"▦";background:linear-gradient(135deg,#8dd7ff,#2c9cf0)}
+.today-summary>div:nth-child(3):before{content:"✓";background:linear-gradient(135deg,#a97cff,#6d42e8)}
+.mobile-quick-search-card{background:rgba(255,255,255,.9)}
+#welcome{font-size:30px;letter-spacing:-.5px}
+
+/* menu redesign */
+@media(max-width:700px){
+  body{background:linear-gradient(180deg,#f4fbff,#edf6ff)!important}
+  .topbar{background:linear-gradient(180deg,rgba(218,242,255,.94),rgba(255,255,255,.93))!important;padding-left:76px!important;padding-top:calc(14px + var(--safe-top))!important;padding-bottom:14px!important}
+  .brand{font-size:23px!important}
+  .mobile-nav-toggle{width:52px!important;height:52px!important;border-radius:16px!important;background:rgba(255,255,255,.9)!important;border:1px solid #d4e4f3!important;font-size:27px!important;box-shadow:0 9px 22px rgba(25,83,140,.13)!important}
+  .mobile-nav-toggle.menu-open{left:calc(var(--mobile-open) - 62px)!important;background:#fff!important;color:#15304f!important;border-color:#d4e4f3!important}
+  .sidebar{
+    width:min(82vw,350px)!important;padding:calc(env(safe-area-inset-top,0px) + 72px) 14px calc(env(safe-area-inset-bottom,0px) + 18px)!important;
+    background:linear-gradient(180deg,rgba(238,248,255,.98),rgba(247,251,255,.98))!important;
+    box-shadow:14px 0 42px rgba(7,36,73,.22)!important
+  }
+  .mobile-nav-backdrop{left:min(82vw,350px)!important;background:rgba(5,24,48,.48)!important;backdrop-filter:blur(3px)}
+  .menu{gap:7px!important}
+  .menu button{height:52px!important;border:1px solid #dbe9f5!important;background:rgba(255,255,255,.82)!important;color:#17304e!important;border-radius:15px!important;font-size:15px!important;font-weight:700!important;box-shadow:0 4px 12px rgba(35,91,145,.055)!important}
+  .menu button::before{width:32px!important;height:32px!important;flex:0 0 32px!important;border-radius:10px!important;display:grid!important;place-items:center!important;color:#fff!important;font-size:17px!important;background:linear-gradient(135deg,#2baeff,#086dff)!important}
+  .menu button:nth-child(4)::before,.menu button:nth-child(6)::before{background:linear-gradient(135deg,#49d889,#08a45c)!important}
+  .menu button:nth-child(5)::before{background:linear-gradient(135deg,#a374ff,#6635e7)!important}
+  .menu button:nth-child(7)::before,.menu button:nth-child(12)::before{background:linear-gradient(135deg,#ff657a,#ef2448)!important}
+  .menu button:nth-child(9)::before,.menu button:nth-child(13)::before{background:linear-gradient(135deg,#ffc14d,#ff9418)!important}
+  .menu button.active{background:linear-gradient(135deg,#0878ff,#12b9f4)!important;color:#fff!important;border-color:transparent!important}
+  .menu button.active::before{background:rgba(255,255,255,.2)!important}
+  main{padding:14px 12px calc(20px + var(--safe-bottom))!important}
+  #welcome{font-size:26px;margin-bottom:12px}
+  .v940-hero{min-height:205px;padding:25px 22px;border-radius:24px}
+  .v940-hero-title{font-size:34px}.v940-hero-sub{font-size:17px}
+  .v940-hero-art{width:145px;height:150px;margin-right:-15px}
+  .v940-phone{right:0;width:78px;height:130px;border-width:5px;font-size:40px}
+  .v940-card-art{right:45px;bottom:10px;width:110px;height:72px;font-size:35px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .stat{min-height:112px;padding:16px 12px 12px 72px!important;border-radius:20px!important}
+  .stat:before{left:13px;top:17px;width:48px;height:48px}
+  .stat strong{font-size:28px}
+  .today-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .today-summary>div{min-height:90px;padding:15px 12px 14px 66px!important;border-radius:20px!important}
+  .today-summary>div:first-child{grid-column:1/-1}
+  .today-summary>div:before{left:12px;top:18px}
+  .today-summary strong{font-size:22px!important}
+  .card{border-radius:20px!important}
+}
+@media(max-width:420px){
+  .v940-hero{min-height:190px;padding:22px 18px}.v940-hero-title{font-size:31px}.v940-hero-sub{font-size:15px}
+  .v940-hero-art{width:125px}.v940-card-art{width:96px;right:37px}.v940-phone{width:70px}
+}
+
+
+/* ===== v9.4.1 POLISHED DESKTOP SIDEBAR + ACTIONS ===== */
+@media (min-width:701px){
+  .sidebar{
+    width:292px!important;
+    padding:16px 14px 22px!important;
+    background:linear-gradient(180deg,#0b3766 0%,#08294e 45%,#061f3e 100%)!important;
+    box-shadow:10px 0 30px rgba(5,42,82,.14)!important;
+  }
+  main{margin-left:0!important;padding:22px!important}
+  .menu{display:flex!important;flex-direction:column!important;gap:7px!important}
+  .menu button{
+    min-height:50px!important;padding:8px 13px!important;border:1px solid rgba(255,255,255,.08)!important;
+    border-radius:15px!important;background:rgba(255,255,255,.055)!important;color:#f5f9ff!important;
+    font-size:14px!important;font-weight:700!important;text-align:left!important;display:flex!important;align-items:center!important;gap:12px!important;
+    transition:.18s ease!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+  }
+  .menu button:hover{transform:translateX(3px);background:rgba(255,255,255,.105)!important}
+  .menu button.active{background:linear-gradient(135deg,#0878ff,#14bdf5)!important;border-color:transparent!important;box-shadow:0 9px 22px rgba(0,139,255,.27)!important}
+  .menu button::before{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;color:white;font-size:17px;font-weight:900;background:linear-gradient(135deg,#2eb6ff,#0872ff);box-shadow:0 5px 12px rgba(0,0,0,.14)}
+  .menu button:nth-child(1)::before{content:'⌂'}
+  .menu button:nth-child(2)::before{content:'♟'}
+  .menu button:nth-child(3)::before{content:'▤'}
+  .menu button:nth-child(4)::before{content:'▣';background:linear-gradient(135deg,#48d68a,#069e5b)}
+  .menu button:nth-child(5)::before{content:'◷';background:linear-gradient(135deg,#9a72ff,#5b2bdc)}
+  .menu button:nth-child(6)::before{content:'✓';background:linear-gradient(135deg,#45d58a,#059b59)}
+  .menu button:nth-child(7)::before{content:'⊘';background:linear-gradient(135deg,#ff667c,#e92449)}
+  .menu button:nth-child(8)::before{content:'⌕'}
+  .menu button:nth-child(9)::before{content:'▰';background:linear-gradient(135deg,#ffc24f,#ff9417)}
+  .menu button:nth-child(10)::before{content:'◉'}
+  .menu button:nth-child(11)::before{content:'▥';background:linear-gradient(135deg,#27b5e8,#0875c9)}
+  .menu button:nth-child(12)::before{content:'♟';background:linear-gradient(135deg,#ff657c,#ed2548)}
+  .menu button:nth-child(13)::before{content:'▾';background:linear-gradient(135deg,#ffc24d,#ff9418)}
+  .menu button:nth-child(14)::before{content:'★'}
+  .menu button:nth-child(15)::before{content:'⚙'}
+  .menu button:nth-child(16)::before{content:'↧';background:linear-gradient(135deg,#4f9ee9,#2468aa)}
+}
+/* Modern action buttons across the application */
+.btn,.support-contact-card button,.support-card button{
+  border-radius:13px!important;font-weight:800!important;transition:transform .15s ease,box-shadow .15s ease!important;
+}
+.btn:hover,.support-contact-card button:hover,.support-card button:hover{transform:translateY(-1px)}
+button[onclick*="edit" i],button[onclick*="Edit"],.btn.edit-btn{
+  background:linear-gradient(135deg,#eaf5ff,#d9edff)!important;color:#0868d8!important;border:1px solid #bfddfb!important;box-shadow:0 5px 12px rgba(8,104,216,.10)!important;
+}
+button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
+  background:linear-gradient(135deg,#ff5d70,#e92e45)!important;color:#fff!important;border:0!important;box-shadow:0 7px 15px rgba(233,46,69,.18)!important;
+}
+#support .card{border-radius:24px!important;background:rgba(255,255,255,.92)!important;box-shadow:0 16px 34px rgba(33,88,143,.10)!important}
+#supportContacts>div{border-radius:18px!important;background:linear-gradient(135deg,#f9fcff,#eef6ff)!important;border:1px solid #dceaf6!important;box-shadow:0 7px 18px rgba(34,88,141,.07)!important}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -203,7 +366,7 @@ th{font-size:13px;color:#68758b}
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.3.9</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.1</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -218,7 +381,7 @@ th{font-size:13px;color:#68758b}
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.3.9</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.1</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -246,6 +409,16 @@ th{font-size:13px;color:#68758b}
     <main>
       <section id="home">
         <h2 id="welcome">Добро пожаловать!</h2>
+        <div class="v940-hero">
+          <div class="v940-hero-copy">
+            
+            
+          </div>
+          <div class="v940-hero-art" aria-hidden="true">
+            <div class="v940-phone">✓</div>
+            <div class="v940-card-art">₽</div>
+          </div>
+        </div>
         <div id="sellerSubscriptionBanner" class="hidden" style="margin:0 0 16px;padding:14px 16px;border:2px solid #dc2626;border-radius:14px;background:#fff5f5;color:#dc2626;font-weight:800;font-size:18px;text-align:center">
           До окончания доступа: <span id="sellerSubscriptionCountdown">—</span>
           <div id="sellerSubscriptionUntil" style="font-size:13px;margin-top:4px;font-weight:700"></div>
@@ -464,7 +637,7 @@ th{font-size:13px;color:#68758b}
             <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
           <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
-          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.3.9</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.1</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
