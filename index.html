@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.4.1</title>
+<title>Рассрочка PRO v9.4.2</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -146,7 +146,7 @@ th{font-size:13px;color:#68758b}
 /* ===== v8: 30-in-1 dashboard upgrade ===== */
 .v8-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v8-tabs button{border:1px solid #d7dfeb;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.v8-tabs button.active{background:#246bfd;color:#fff;border-color:#246bfd}.v8-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v8-panel{background:#f7f9fc;border:1px solid #e5eaf2;border-radius:12px;padding:13px}.v8-big{font-size:22px;font-weight:800;margin-top:5px}.v8-search{display:flex;gap:8px;flex-wrap:wrap}.v8-search input{flex:1;min-width:220px}.v8-client-folder{border:1px solid #e3e9f2;border-radius:12px;padding:12px;margin:8px 0;background:#fff;cursor:pointer}.v8-client-folder:hover{background:#f5f8ff}.v8-overdue{border-left:4px solid #d83a3a}.v8-ok{border-left:4px solid #18a864}@media(max-width:700px){.v8-grid{grid-template-columns:1fr}.v8-tabs{overflow-x:auto;flex-wrap:nowrap}.v8-tabs button{white-space:nowrap}}
 
-/* ===== v9.4.1 MOBILE DRAWER NAV: HIDDEN WHEN CLOSED ===== */
+/* ===== v9.4.2 MOBILE DRAWER NAV: HIDDEN WHEN CLOSED ===== */
 .mobile-nav-toggle,.mobile-nav-backdrop{display:none}
 @media(max-width:700px){
   :root{--mobile-open:70vw}
@@ -197,7 +197,7 @@ th{font-size:13px;color:#68758b}
 }
 
 
-/* ===== v9.4.1 VISUAL REDESIGN ===== */
+/* ===== v9.4.2 VISUAL REDESIGN ===== */
 :root{
   --v940-blue:#0878ff;--v940-blue2:#13b8f5;--v940-navy:#071d3c;
   --v940-green:#13b86b;--v940-purple:#6d42e8;--v940-red:#f43f5e;
@@ -309,7 +309,7 @@ input,select,textarea{border-radius:14px;border-color:#cfdfef;background:rgba(25
 }
 
 
-/* ===== v9.4.1 POLISHED DESKTOP SIDEBAR + ACTIONS ===== */
+/* ===== v9.4.2 POLISHED DESKTOP SIDEBAR + ACTIONS ===== */
 @media (min-width:701px){
   .sidebar{
     width:292px!important;
@@ -360,13 +360,45 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 #supportContacts>div{border-radius:18px!important;background:linear-gradient(135deg,#f9fcff,#eef6ff)!important;border:1px solid #dceaf6!important;box-shadow:0 7px 18px rgba(34,88,141,.07)!important}
 
 </style>
+
+/* ===== v9.4.2 FINAL MOBILE COMPACT + ROLE MENU FIX ===== */
+.menu button.hidden{display:none!important}
+@media(max-width:700px){
+  /* Compact home: more information visible without browser zoom */
+  #home{font-size:14px}
+  #home #welcome{font-size:22px!important;margin:2px 0 8px!important}
+  #home .v940-hero{min-height:118px!important;height:118px!important;margin-bottom:10px!important;padding:12px 16px!important;border-radius:18px!important}
+  #home .v940-hero-art{width:122px!important;height:100px!important;margin-left:auto!important;margin-right:0!important}
+  #home .v940-phone{width:54px!important;height:90px!important;border-width:4px!important;border-radius:15px!important;font-size:28px!important;right:5px!important}
+  #home .v940-card-art{width:78px!important;height:50px!important;border-radius:13px!important;font-size:26px!important;right:38px!important;bottom:6px!important}
+  #home #sellerSubscriptionBanner{margin:0 0 10px!important;padding:10px 12px!important;border-radius:16px!important;font-size:15px!important}
+  #home #sellerSubscriptionUntil{font-size:11px!important}
+  #home .stats{gap:8px!important;margin-bottom:10px!important}
+  #home .stat{min-height:82px!important;padding:11px 8px 8px 58px!important;border-radius:16px!important;font-size:13px!important}
+  #home .stat:before{left:10px!important;top:14px!important;width:38px!important;height:38px!important;border-radius:11px!important;font-size:19px!important}
+  #home .stat strong{font-size:23px!important;margin-top:3px!important}
+  #home .today-summary{gap:8px!important;margin-bottom:10px!important}
+  #home .today-summary>div{min-height:72px!important;padding:10px 8px 9px 54px!important;border-radius:16px!important}
+  #home .today-summary>div:before{left:9px!important;top:14px!important;width:34px!important;height:34px!important;border-radius:10px!important;font-size:17px!important}
+  #home .today-summary strong{font-size:18px!important;margin-top:3px!important}
+  #home .today-summary span{font-size:12px!important}
+  #home .card{padding:12px!important;margin-bottom:10px!important;border-radius:16px!important}
+  #home .mobile-quick-search-card label{font-size:14px!important;margin-bottom:6px!important}
+  #home .mobile-quick-search{gap:7px!important}
+  #home .mobile-quick-search input{min-height:42px!important;padding:8px 10px!important;font-size:14px!important}
+  #home .mobile-quick-search .btn{min-height:42px!important;padding:8px 14px!important}
+}
+@media(max-width:390px){
+  #home .v940-hero{height:108px!important;min-height:108px!important}
+  #home .stat{min-height:78px!important}
+}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.4.1</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.2</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -381,7 +413,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.1</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.2</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -637,7 +669,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
             <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
           <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
-          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.1</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.2</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
