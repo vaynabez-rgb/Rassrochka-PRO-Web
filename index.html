@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.4.4</title>
+<title>Рассрочка PRO v9.4.5</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -359,6 +359,12 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 #support .card{border-radius:24px!important;background:rgba(255,255,255,.92)!important;box-shadow:0 16px 34px rgba(33,88,143,.10)!important}
 #supportContacts>div{border-radius:18px!important;background:linear-gradient(135deg,#f9fcff,#eef6ff)!important;border:1px solid #dceaf6!important;box-shadow:0 7px 18px rgba(34,88,141,.07)!important}
 
+
+/* ===== v9.4.5 COMPACT LISTS + CLICKABLE HOME ===== */
+.home-click{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}.home-click:hover{transform:translateY(-2px);box-shadow:0 13px 30px rgba(25,83,140,.14)}.home-click:active{transform:scale(.985)}
+.compact-list{display:flex;flex-direction:column;gap:8px}.compact-row{display:grid;grid-template-columns:minmax(220px,1.6fr) minmax(180px,1.2fr) minmax(140px,1fr) auto auto;align-items:center;gap:14px;padding:12px 14px;border:1px solid #dce8f4;border-radius:14px;background:#fff;box-shadow:0 4px 12px rgba(35,91,145,.045)}
+.client-row{grid-template-columns:minmax(240px,1fr) auto}.payment-row{grid-template-columns:150px minmax(220px,1fr) 160px auto}.compact-main{min-width:0}.compact-label{display:block;color:#7b8ba3;font-size:11px;font-weight:700;margin-bottom:3px}.compact-open{white-space:nowrap}.compact-status{white-space:nowrap}
+@media(max-width:700px){.compact-list{gap:6px}.compact-row,.client-row,.deal-row,.payment-row{grid-template-columns:1fr auto!important;gap:7px 10px;padding:9px 10px;border-radius:12px}.compact-row .compact-main{grid-column:1}.compact-row .compact-status{grid-column:1}.compact-row .compact-open{grid-column:2;grid-row:1/-1;align-self:stretch;min-width:76px;padding:7px 9px!important}.compact-label{font-size:9px;margin-bottom:1px}.compact-main{font-size:12px}.compact-status .badge{font-size:10px!important}.home-click:hover{transform:none}}
 </style>
 
 <style>
@@ -397,7 +403,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-/* ===== v9.4.4 EXTRA COMPACT MOBILE HOME ===== */
+/* ===== v9.4.5 EXTRA COMPACT MOBILE HOME ===== */
 @media(max-width:700px){
   #home{font-size:12.5px!important}
   #home #welcome{font-size:19px!important;margin:0 0 6px!important}
@@ -430,7 +436,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.4.4</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.5</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -445,7 +451,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.4</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.5</small></div><small id="shopLabel"></small></div>
     <div><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
   <div class="layout">
@@ -488,15 +494,15 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
           <div id="sellerSubscriptionUntil" style="font-size:13px;margin-top:4px;font-weight:700"></div>
         </div>
         <div class="stats">
-          <div class="stat">Клиенты<strong id="statClients">0</strong></div>
-          <div class="stat">Активные<strong id="statActive">0</strong></div>
-          <div class="stat">Просрочки<strong id="statOverdue">0</strong></div>
-          <div class="stat">Завершены<strong id="statSuccess">0</strong></div>
+          <div class="stat home-click" onclick="homeOpenClients()">Клиенты<strong id="statClients">0</strong></div>
+          <div class="stat home-click" onclick="homeOpenActive()">Активные<strong id="statActive">0</strong></div>
+          <div class="stat home-click" onclick="homeOpenOverdue()">Просрочки<strong id="statOverdue">0</strong></div>
+          <div class="stat home-click" onclick="homeOpenSuccess()">Завершены<strong id="statSuccess">0</strong></div>
         </div>
         <div class="today-summary">
-          <div><span>Сегодня нужно получить</span><strong id="todayExpected">0 ₽</strong></div>
-          <div><span>Платежей сегодня</span><strong id="todayCount">0</strong></div>
-          <div><span>Получено сегодня</span><strong id="todayReceived">0 ₽</strong></div>
+          <div class="home-click" onclick="homeOpenPayments('expected')"><span>Сегодня нужно получить</span><strong id="todayExpected">0 ₽</strong></div>
+          <div class="home-click" onclick="homeOpenPayments('expected')"><span>Платежей сегодня</span><strong id="todayCount">0</strong></div>
+          <div class="home-click" onclick="homeOpenPayments('received')"><span>Получено сегодня</span><strong id="todayReceived">0 ₽</strong></div>
         </div>
         <div class="card mobile-quick-search-card">
           <label style="margin-top:0">Быстрый поиск</label>
@@ -701,7 +707,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
             <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
           <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
-          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.4</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.5</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
@@ -911,6 +917,13 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <div class="modal-card">
     <div class="modal-head"><h2>Карточка рассрочки</h2><button class="close" onclick="closeDealDetails()">×</button></div>
     <div id="dealDetailsContent"></div>
+  </div>
+</div>
+
+<div id="paymentDetailsModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><h2>Карточка платежа</h2><button class="close" onclick="closePaymentDetails()">×</button></div>
+    <div id="paymentDetailsContent"></div>
   </div>
 </div>
 
@@ -2571,163 +2584,19 @@ function editClient(id) {
 ================================ */
 
 function renderClients() {
-
-  const box =
-    document.getElementById("clientsTable");
-
-  if (!box) return;
-
-  const filter =
-    document.getElementById("clientFilter");
-
-  const q =
-    normalize(filter ? filter.value : "");
-
-  let arr =
-    myClients().filter(c => {
-      const haystack = normalize([
-        fullName(c),
-        c.phone || "",
-        c.phone2 || "",
-        c.tag || "",
-        c.passportSeries || "",
-        c.passportNumber || ""
-      ].join(" "));
-      return !q || haystack.includes(q);
-    });
-
-  const sort = document.getElementById("clientSort")?.value || "name";
-  if (sort === "new") {
-    arr.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
-  } else if (sort === "deals") {
-    arr.sort((a,b)=>
-      db.deals.filter(d=>d.clientId===b.id).length -
-      db.deals.filter(d=>d.clientId===a.id).length
-    );
-  } else {
-    arr.sort((a,b)=>fullName(a).localeCompare(fullName(b),"ru"));
-  }
-
-
-  if (!arr.length) {
-
-    box.innerHTML =
-      '<div class="empty">Клиентов пока нет.</div>';
-
-    return;
-  }
-
-
-  box.innerHTML = `
-
-  <table>
-
-    <thead>
-
-      <tr>
-
-        <th>ФИО</th>
-        <th>Дата рождения</th>
-        <th>Телефон</th>
-        <th>Паспорт</th>
-        <th>Документы</th>
-        <th>Сделки</th>
-        <th>Действия</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody>
-
-    ${arr.map(c => `
-
-      <tr>
-
-        <td>
-          <b>${esc(fullName(c))}</b>
-        </td>
-
-        <td>
-          ${dateRu(c.birth)}
-        </td>
-
-        <td>
-          ${esc(c.phone || "—")}
-        </td>
-
-        <td>
-
-          ${
-            c.passportSeries ||
-            c.passportNumber
-
-            ? esc(
-                `${c.passportSeries || ""} ${c.passportNumber || ""}`
-              )
-
-            : "—"
-          }
-
-        </td>
-
-        <td>
-
-          <span class="badge bblue">
-
-            ${
-              Array.isArray(c.photos)
-                ? c.photos.length
-                : c.documentPhotoCount || 0
-            }
-
-            фото
-
-          </span>
-
-        </td>
-
-        <td>
-
-          ${
-            db.deals.filter(
-              d => d.clientId === c.id
-            ).length
-          }
-
-        </td>
-
-        <td>
-
-          <button
-            class="btn primary"
-            onclick="viewClient('${c.id}')">
-
-            Открыть
-
-          </button>
-
-          <button
-            class="btn graybtn"
-            onclick="editClient('${c.id}')">
-
-            Изменить
-
-          </button>
-
-        </td>
-
-      </tr>
-
-    `).join("")}
-
-    </tbody>
-
-  </table>
-
-  `;
+  const box=document.getElementById("clientsTable"); if(!box)return;
+  const q=normalize(document.getElementById("clientFilter")?.value||"");
+  let arr=myClients().filter(c=>!q||normalize([fullName(c),c.phone||"",c.phone2||"",c.tag||"",c.passportSeries||"",c.passportNumber||""].join(" ")).includes(q));
+  const sort=document.getElementById("clientSort")?.value||"name";
+  if(sort==="new")arr.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  else if(sort==="deals")arr.sort((a,b)=>db.deals.filter(d=>d.clientId===b.id).length-db.deals.filter(d=>d.clientId===a.id).length);
+  else arr.sort((a,b)=>fullName(a).localeCompare(fullName(b),"ru"));
+  if(!arr.length){box.innerHTML='<div class="empty">Клиентов пока нет.</div>';return;}
+  box.innerHTML=`<div class="compact-list">${arr.map(c=>`<div class="compact-row client-row">
+    <div class="compact-main"><span class="compact-label">Клиент</span><b>${esc(fullName(c))}</b></div>
+    <button class="btn primary compact-open" onclick="viewClient('${c.id}')">Открыть</button>
+  </div>`).join("")}</div>`;
 }
-
 
 /* ================================
    CLIENT CARD
@@ -3618,7 +3487,7 @@ function printDeal(id){
   const schedule=installmentSchedule(d);
   const w=window.open("","_blank");
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(d.contractNumber||"Рассрочка")}</title>
-  <style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}h1{margin-bottom:5px}.muted{color:#666}</style>\n<style>\n/* ===== v9.4.4 UNIFIED MOBILE COMPACT SCALE ===== */\n@media(max-width:700px){\n  /* Same compact visual density as Home, now across every tab */\n  main > section:not(#home){font-size:12.5px!important}\n  main > section:not(#home) .card{padding:9px!important;margin-bottom:7px!important;border-radius:13px!important}\n  main > section:not(#home) h1{font-size:20px!important;margin-bottom:7px!important}\n  main > section:not(#home) h2{font-size:19px!important;line-height:1.15!important;margin:0 0 8px!important}\n  main > section:not(#home) h3{font-size:15px!important;line-height:1.2!important;margin:0 0 7px!important}\n  main > section:not(#home) p{margin:5px 0!important;line-height:1.3!important}\n  main > section:not(#home) label{font-size:11.5px!important;margin:7px 0 4px!important}\n  main > section:not(#home) .muted,\n  main > section:not(#home) .form-help,\n  main > section:not(#home) .kpi-note{font-size:10.5px!important}\n  main > section:not(#home) .grid,\n  main > section:not(#home) .grid3,\n  main > section:not(#home) .two-col,\n  main > section:not(#home) .info-grid,\n  main > section:not(#home) .mini-stats{gap:7px!important}\n  main > section:not(#home) .toolbar{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) input,\n  main > section:not(#home) select,\n  main > section:not(#home) textarea{min-height:38px!important;padding:6px 8px!important;border-radius:11px!important;font-size:16px!important}\n  main > section:not(#home) textarea{min-height:68px!important}\n  main > section:not(#home) .btn{min-height:36px!important;padding:6px 9px!important;border-radius:11px!important;font-size:12px!important}\n  main > section:not(#home) .row-actions{gap:5px!important;margin-top:8px!important}\n  main > section:not(#home) .row-actions .btn{flex:1 1 110px!important}\n  main > section:not(#home) .notice,\n  main > section:not(#home) .empty,\n  main > section:not(#home) .alert-card,\n  main > section:not(#home) .note-card,\n  main > section:not(#home) .info-box,\n  main > section:not(#home) .mini,\n  main > section:not(#home) .summary-box,\n  main > section:not(#home) .v8-panel{padding:8px!important;border-radius:10px!important}\n  main > section:not(#home) .badge,\n  main > section:not(#home) .tag{font-size:10px!important;padding:3px 6px!important}\n  main > section:not(#home) .summary-strip{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) .summary-box strong{font-size:16px!important}\n  main > section:not(#home) table tbody{gap:7px!important}\n  main > section:not(#home) table tr{padding:8px!important;border-radius:12px!important}\n  main > section:not(#home) table td{grid-template-columns:minmax(78px,34%) minmax(0,1fr)!important;gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n  main > section:not(#home) table td::before{font-size:10px!important}\n  main > section:not(#home) .customer-result,\n  main > section:not(#home) .document-section,\n  main > section:not(#home) .seller-client-card,\n  main > section:not(#home) .seller-tab-content,\n  main > section:not(#home) .v8-client-folder{padding:8px!important;margin:6px 0!important;border-radius:11px!important}\n  main > section:not(#home) .customer-title,\n  main > section:not(#home) .seller-client-name{font-size:14px!important}\n  main > section:not(#home) .seller-cabinet-head{padding:8px!important;margin-bottom:7px!important;border-radius:11px!important}\n  main > section:not(#home) .seller-tabs,\n  main > section:not(#home) .v8-tabs{gap:5px!important;margin:7px 0!important}\n  main > section:not(#home) .seller-tabs .btn,\n  main > section:not(#home) .v8-tabs button{min-height:34px!important;padding:5px 8px!important;font-size:11px!important}\n  main > section:not(#home) .photo-preview{gap:7px!important;margin-top:7px!important}\n  main > section:not(#home) .photo-card img{height:105px!important}\n  main > section:not(#home) .client-search-item{padding:7px 8px!important;font-size:12px!important}\n  main > section:not(#home) .client-search-results{max-height:220px!important}\n  main > section:not(#home) .progress{height:6px!important}\n  /* Keep modals compact too, while inputs remain 16px to prevent iPhone auto-zoom */\n  .modal-card{padding:11px!important;border-radius:15px 15px 7px 7px!important;font-size:12.5px!important}\n  .modal-card h2{font-size:19px!important;margin-bottom:8px!important}\n  .modal-card h3{font-size:15px!important;margin-bottom:7px!important}\n  .modal-card label{font-size:11.5px!important;margin:7px 0 4px!important}\n  .modal-card input,.modal-card select,.modal-card textarea{min-height:38px!important;padding:6px 8px!important;font-size:16px!important;border-radius:11px!important}\n  .modal-card .btn{min-height:36px!important;padding:6px 9px!important;font-size:12px!important}\n  .modal-card .row-actions{gap:5px!important;margin-top:8px!important}\n  .modal-card table tbody{gap:7px!important}\n  .modal-card table tr{padding:8px!important;border-radius:12px!important}\n  .modal-card table td{gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n}\n</style>\n</head><body>
+  <style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}h1{margin-bottom:5px}.muted{color:#666}</style>\n<style>\n/* ===== v9.4.5 UNIFIED MOBILE COMPACT SCALE ===== */\n@media(max-width:700px){\n  /* Same compact visual density as Home, now across every tab */\n  main > section:not(#home){font-size:12.5px!important}\n  main > section:not(#home) .card{padding:9px!important;margin-bottom:7px!important;border-radius:13px!important}\n  main > section:not(#home) h1{font-size:20px!important;margin-bottom:7px!important}\n  main > section:not(#home) h2{font-size:19px!important;line-height:1.15!important;margin:0 0 8px!important}\n  main > section:not(#home) h3{font-size:15px!important;line-height:1.2!important;margin:0 0 7px!important}\n  main > section:not(#home) p{margin:5px 0!important;line-height:1.3!important}\n  main > section:not(#home) label{font-size:11.5px!important;margin:7px 0 4px!important}\n  main > section:not(#home) .muted,\n  main > section:not(#home) .form-help,\n  main > section:not(#home) .kpi-note{font-size:10.5px!important}\n  main > section:not(#home) .grid,\n  main > section:not(#home) .grid3,\n  main > section:not(#home) .two-col,\n  main > section:not(#home) .info-grid,\n  main > section:not(#home) .mini-stats{gap:7px!important}\n  main > section:not(#home) .toolbar{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) input,\n  main > section:not(#home) select,\n  main > section:not(#home) textarea{min-height:38px!important;padding:6px 8px!important;border-radius:11px!important;font-size:16px!important}\n  main > section:not(#home) textarea{min-height:68px!important}\n  main > section:not(#home) .btn{min-height:36px!important;padding:6px 9px!important;border-radius:11px!important;font-size:12px!important}\n  main > section:not(#home) .row-actions{gap:5px!important;margin-top:8px!important}\n  main > section:not(#home) .row-actions .btn{flex:1 1 110px!important}\n  main > section:not(#home) .notice,\n  main > section:not(#home) .empty,\n  main > section:not(#home) .alert-card,\n  main > section:not(#home) .note-card,\n  main > section:not(#home) .info-box,\n  main > section:not(#home) .mini,\n  main > section:not(#home) .summary-box,\n  main > section:not(#home) .v8-panel{padding:8px!important;border-radius:10px!important}\n  main > section:not(#home) .badge,\n  main > section:not(#home) .tag{font-size:10px!important;padding:3px 6px!important}\n  main > section:not(#home) .summary-strip{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) .summary-box strong{font-size:16px!important}\n  main > section:not(#home) table tbody{gap:7px!important}\n  main > section:not(#home) table tr{padding:8px!important;border-radius:12px!important}\n  main > section:not(#home) table td{grid-template-columns:minmax(78px,34%) minmax(0,1fr)!important;gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n  main > section:not(#home) table td::before{font-size:10px!important}\n  main > section:not(#home) .customer-result,\n  main > section:not(#home) .document-section,\n  main > section:not(#home) .seller-client-card,\n  main > section:not(#home) .seller-tab-content,\n  main > section:not(#home) .v8-client-folder{padding:8px!important;margin:6px 0!important;border-radius:11px!important}\n  main > section:not(#home) .customer-title,\n  main > section:not(#home) .seller-client-name{font-size:14px!important}\n  main > section:not(#home) .seller-cabinet-head{padding:8px!important;margin-bottom:7px!important;border-radius:11px!important}\n  main > section:not(#home) .seller-tabs,\n  main > section:not(#home) .v8-tabs{gap:5px!important;margin:7px 0!important}\n  main > section:not(#home) .seller-tabs .btn,\n  main > section:not(#home) .v8-tabs button{min-height:34px!important;padding:5px 8px!important;font-size:11px!important}\n  main > section:not(#home) .photo-preview{gap:7px!important;margin-top:7px!important}\n  main > section:not(#home) .photo-card img{height:105px!important}\n  main > section:not(#home) .client-search-item{padding:7px 8px!important;font-size:12px!important}\n  main > section:not(#home) .client-search-results{max-height:220px!important}\n  main > section:not(#home) .progress{height:6px!important}\n  /* Keep modals compact too, while inputs remain 16px to prevent iPhone auto-zoom */\n  .modal-card{padding:11px!important;border-radius:15px 15px 7px 7px!important;font-size:12.5px!important}\n  .modal-card h2{font-size:19px!important;margin-bottom:8px!important}\n  .modal-card h3{font-size:15px!important;margin-bottom:7px!important}\n  .modal-card label{font-size:11.5px!important;margin:7px 0 4px!important}\n  .modal-card input,.modal-card select,.modal-card textarea{min-height:38px!important;padding:6px 8px!important;font-size:16px!important;border-radius:11px!important}\n  .modal-card .btn{min-height:36px!important;padding:6px 9px!important;font-size:12px!important}\n  .modal-card .row-actions{gap:5px!important;margin-top:8px!important}\n  .modal-card table tbody{gap:7px!important}\n  .modal-card table tr{padding:8px!important;border-radius:12px!important}\n  .modal-card table td{gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n}\n</style>\n</head><body>
   <h1>Рассрочка PRO</h1>
   <p><b>№ договора:</b> ${esc(d.contractNumber||"—")} &nbsp; <b>Магазин:</b> ${esc(seller()?.shop||"—")}</p>
   <p><b>Клиент:</b> ${esc(c?fullName(c):"—")} &nbsp; <b>Дата рождения:</b> ${c?dateRu(c.birth):"—"}</p>
@@ -3964,54 +3833,19 @@ function dealStatus(d) {
 
 
 function renderDeals() {
-
-  const box = document.getElementById("dealsTable");
-  if (!box) return;
-
-  const q = normalize(document.getElementById("dealFilter")?.value || "");
-  const statusFilter = document.getElementById("dealStatusFilter")?.value || "all";
-
-  let arr = myDeals().filter(d => {
-    const c = db.clients.find(x => x.id === d.clientId);
-    const text = normalize(`${c ? fullName(c) : ""} ${d.product || ""}`);
-    if (q && !text.includes(q)) return false;
-    if (statusFilter === "completed" && d.status !== "completed") return false;
-    if (statusFilter === "overdue" && !isOverdue(d)) return false;
-    if (statusFilter === "active" && (d.status === "completed" || isOverdue(d))) return false;
-    return true;
-  });
-
+  const box=document.getElementById("dealsTable"); if(!box)return;
+  const q=normalize(document.getElementById("dealFilter")?.value||"");
+  const statusFilter=document.getElementById("dealStatusFilter")?.value||"all";
+  let arr=myDeals().filter(d=>{const c=db.clients.find(x=>x.id===d.clientId);const text=normalize(`${d.contractNumber||""} ${c?fullName(c):""} ${d.product||""}`);if(q&&!text.includes(q))return false;if(statusFilter==="completed"&&d.status!=="completed")return false;if(statusFilter==="overdue"&&!isOverdue(d))return false;if(statusFilter==="active"&&(d.status==="completed"||isOverdue(d)))return false;return true;});
   arr.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
-
-  if (!arr.length) {
-    box.innerHTML = '<div class="empty">Рассрочек по выбранным условиям нет.</div>';
-    return;
-  }
-
-  box.innerHTML = `
-  <table>
-    <thead><tr>
-      <th>Клиент</th><th>Товар</th><th>Стоимость</th><th>Оплачено</th>
-      <th>Остаток</th><th>Прогресс</th><th>Следующий платёж</th><th>Статус</th><th></th>
-    </tr></thead>
-    <tbody>
-    ${arr.map(d => {
-      const c = db.clients.find(x => x.id === d.clientId);
-      const progress = paymentProgress(d);
-      return `<tr>
-        <td>${esc(c ? fullName(c) : "Клиент")}</td>
-        <td>${esc(d.product)}</td>
-        <td>${money(d.amount)}</td>
-        <td>${money(Number(d.deposit||0)+paidForDeal(d.id))}</td>
-        <td><b>${money(remaining(d))}</b></td>
-        <td><div>${progress}%</div><div class="progress"><span style="width:${progress}%"></span></div></td>
-        <td>${d.status === "completed" ? "—" : dateRu(dueDate(d))}</td>
-        <td>${dealStatus(d)}</td>
-        <td><button class="btn graybtn" onclick="openDealDetails('${d.id}')">Открыть</button></td>
-      </tr>`;
-    }).join("")}
-    </tbody>
-  </table>`;
+  if(!arr.length){box.innerHTML='<div class="empty">Рассрочек по выбранным условиям нет.</div>';return;}
+  box.innerHTML=`<div class="compact-list">${arr.map(d=>{const c=db.clients.find(x=>x.id===d.clientId);return `<div class="compact-row deal-row">
+    <div class="compact-main compact-contract"><span class="compact-label">Договор</span><b>${esc(d.contractNumber||"Без номера")}</b></div>
+    <div class="compact-main"><span class="compact-label">Клиент</span>${esc(c?fullName(c):"Клиент")}</div>
+    <div class="compact-main"><span class="compact-label">Товар</span>${esc(d.product||"—")}</div>
+    <div class="compact-status">${dealStatus(d)}</div>
+    <button class="btn primary compact-open" onclick="openDealDetails('${d.id}')">Открыть</button>
+  </div>`}).join("")}</div>`;
 }
 
 /* ================================
@@ -4101,106 +3935,32 @@ function addPayment() {
 }
 
 
+let homePaymentFilter="all";
 function renderPayments() {
-
-  const box =
-    document.getElementById("paymentsTable");
-
-  if (!box) return;
-
-
-  const dealIds =
-    myDeals().map(d => d.id);
-
-
-  const arr =
-    db.payments
-
-      .filter(p =>
-        dealIds.includes(p.dealId)
-      )
-
-      .sort(
-        (a, b) =>
-          b.date.localeCompare(a.date)
-      );
-
-
-  if (!arr.length) {
-
-    box.innerHTML =
-      '<div class="empty">Платежей пока нет.</div>';
-
-    return;
+  const box=document.getElementById("paymentsTable"); if(!box)return;
+  const dealIds=myDeals().map(d=>d.id);
+  let arr=db.payments.filter(p=>dealIds.includes(p.dealId)).sort((a,b)=>b.date.localeCompare(a.date));
+  if(homePaymentFilter==="received") arr=arr.filter(p=>p.date===today());
+  if(homePaymentFilter==="expected"){
+    const due=[]; myDeals().filter(d=>d.status!=="completed"&&d.status!=="cancelled").forEach(d=>{const row=installmentSchedule(d).find(r=>r.status!=="paid");if(row&&row.date===today())due.push({id:`due-${d.id}`,dealId:d.id,date:today(),amount:Number(row.left||0),_expected:true});}); arr=due;
   }
-
-
-  box.innerHTML = `
-
-    <h2>История платежей</h2>
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Дата</th>
-          <th>Клиент</th>
-          <th>Товар</th>
-          <th>Сумма</th>
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-      ${arr.map(p => {
-
-        const d =
-          db.deals.find(
-            x => x.id === p.dealId
-          );
-
-        const c =
-          d
-            ? db.clients.find(
-                x => x.id === d.clientId
-              )
-            : null;
-
-        return `
-
-          <tr>
-
-            <td>
-              ${dateRu(p.date)}
-            </td>
-
-            <td>
-              ${esc(c ? fullName(c) : "—")}
-            </td>
-
-            <td>
-              ${esc(d?.product || "—")}
-            </td>
-
-            <td>
-              <b>${money(p.amount)}</b>
-            </td>
-
-          </tr>
-
-        `;
-
-      }).join("")}
-
-      </tbody>
-
-    </table>
-
-  `;
+  if(!arr.length){box.innerHTML=`<h2>${homePaymentFilter==="expected"?'Платежи к получению сегодня':homePaymentFilter==="received"?'Получено сегодня':'История платежей'}</h2><div class="empty">Платежей пока нет.</div>`;return;}
+  const title=homePaymentFilter==="expected"?'Платежи к получению сегодня':homePaymentFilter==="received"?'Получено сегодня':'История платежей';
+  box.innerHTML=`<h2>${title}</h2>${homePaymentFilter!=="all"?'<div class="row-actions"><button class="btn graybtn" onclick="homePaymentFilter=\'all\';renderPayments()">Показать все платежи</button></div>':''}<div class="compact-list">${arr.map(p=>{const d=db.deals.find(x=>x.id===p.dealId);const c=d?db.clients.find(x=>x.id===d.clientId):null;return `<div class="compact-row payment-row">
+    <div class="compact-main"><span class="compact-label">Дата</span><b>${dateRu(p.date)}</b></div>
+    <div class="compact-main"><span class="compact-label">Клиент</span>${esc(c?fullName(c):"—")}</div>
+    <div class="compact-main"><span class="compact-label">Сумма</span><b>${money(p.amount)}</b></div>
+    <button class="btn primary compact-open" onclick="openPaymentDetails('${p.id}','${p.dealId}',${p._expected?'true':'false'})">Открыть</button>
+  </div>`}).join("")}</div>`;
 }
-
+function openPaymentDetails(paymentId,dealId,isExpected=false){
+  const d=db.deals.find(x=>x.id===dealId); if(!d)return; const c=db.clients.find(x=>x.id===d.clientId); const p=isExpected?null:db.payments.find(x=>x.id===paymentId);
+  const amount=isExpected?(()=>{const r=installmentSchedule(d).find(x=>x.status!=="paid");return Number(r?.left||0)})():Number(p?.amount||0);
+  const date=isExpected?today():(p?.date||today());
+  document.getElementById('paymentDetailsContent').innerHTML=`<div class="info-grid"><div class="info-box"><b>Клиент</b><br>${esc(c?fullName(c):'—')}</div><div class="info-box"><b>Договор</b><br>${esc(d.contractNumber||'Без номера')}</div><div class="info-box"><b>Товар</b><br>${esc(d.product||'—')}</div><div class="info-box"><b>${isExpected?'К получению':'Сумма платежа'}</b><br>${money(amount)}</div><div class="info-box"><b>Дата</b><br>${dateRu(date)}</div><div class="info-box"><b>Остаток по рассрочке</b><br>${money(remaining(d))}</div></div><div class="row-actions"><button class="btn primary" onclick="closePaymentDetails();openDealDetails('${d.id}')">Открыть рассрочку</button></div>`;
+  document.getElementById('paymentDetailsModal').classList.remove('hidden');
+}
+function closePaymentDetails(){document.getElementById('paymentDetailsModal')?.classList.add('hidden')}
 
 /* ================================
    OVERDUE
@@ -5338,6 +5098,13 @@ if(document.querySelector('.menu')){
 }
 window.addEventListener('resize',()=>{ if(!window.matchMedia('(max-width:700px)').matches) closeMobileNav(); });
 
+
+function homeMenuBtn(id){return document.querySelector(`.menu button[onclick*="'${id}'"]`)}
+function homeOpenClients(){showPage('clients',homeMenuBtn('clients'));renderClients();closeMobileNav();}
+function homeOpenActive(){showPage('installments',homeMenuBtn('installments'));const f=document.getElementById('dealStatusFilter');if(f)f.value='active';renderDeals();closeMobileNav();}
+function homeOpenOverdue(){showPage('overdue',homeMenuBtn('overdue'));closeMobileNav();}
+function homeOpenSuccess(){showPage('success',homeMenuBtn('success'));closeMobileNav();}
+function homeOpenPayments(mode){homePaymentFilter=mode||'all';showPage('payments',homeMenuBtn('payments'));renderPayments();closeMobileNav();}
 
 /* ===== v9.3.5 MOBILE UX ===== */
 function v88ApplyTableLabels(root=document){
