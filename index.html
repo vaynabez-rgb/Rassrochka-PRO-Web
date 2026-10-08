@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.4.15</title>
+<title>Рассрочка PRO v9.4.17</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -360,7 +360,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 #supportContacts>div{border-radius:18px!important;background:linear-gradient(135deg,#f9fcff,#eef6ff)!important;border:1px solid #dceaf6!important;box-shadow:0 7px 18px rgba(34,88,141,.07)!important}
 
 
-/* ===== v9.4.15 COMPACT LISTS + CLICKABLE HOME ===== */
+/* ===== v9.4.13 COMPACT LISTS + CLICKABLE HOME ===== */
 .home-click{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}.home-click:hover{transform:translateY(-2px);box-shadow:0 13px 30px rgba(25,83,140,.14)}.home-click:active{transform:scale(.985)}
 .compact-list{display:flex;flex-direction:column;gap:8px}.compact-row{display:grid;grid-template-columns:minmax(220px,1.6fr) minmax(180px,1.2fr) minmax(140px,1fr) auto auto;align-items:center;gap:14px;padding:12px 14px;border:1px solid #dce8f4;border-radius:14px;background:#fff;box-shadow:0 4px 12px rgba(35,91,145,.045)}
 .client-row{grid-template-columns:minmax(240px,1fr) auto}.payment-row{grid-template-columns:150px minmax(220px,1fr) 160px auto}.compact-main{min-width:0}.compact-label{display:block;color:#7b8ba3;font-size:11px;font-weight:700;margin-bottom:3px}.compact-open{white-space:nowrap}.compact-status{white-space:nowrap}
@@ -403,7 +403,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-/* ===== v9.4.15 EXTRA COMPACT MOBILE HOME ===== */
+/* ===== v9.4.13 EXTRA COMPACT MOBILE HOME ===== */
 @media(max-width:700px){
   #home{font-size:12.5px!important}
   #home #welcome{font-size:19px!important;margin:0 0 6px!important}
@@ -433,7 +433,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 </style>
 
 <style>
-/* ===== v9.4.15 DESKTOP LAYOUT WIDTH FIX ===== */
+/* ===== v9.4.13 DESKTOP LAYOUT WIDTH FIX ===== */
 @media (min-width:901px){
   .layout{
     display:grid!important;
@@ -464,7 +464,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   main{margin-left:0!important;width:100%!important;max-width:100%!important}
 }
 
-/* ===== v9.4.15 DEVELOPER BRAND ===== */
+/* ===== v9.4.13 DEVELOPER BRAND ===== */
 .developer-signature{
   display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
   line-height:1.05;margin-left:auto;margin-right:12px;white-space:nowrap;user-select:none
@@ -485,7 +485,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.4.15</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.17</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -500,7 +500,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.15</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.17</small></div><small id="shopLabel"></small></div>
     <div class="developer-signature" aria-label="Разработчик GHOST013"><span class="dev-caption">РАЗРАБОТЧИК</span><span class="dev-name">GHOST013</span></div>
     <div class="topbar-main-actions"><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
@@ -757,7 +757,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
             <button id="supportAddBtn" class="btn primary hidden" onclick="addSupportContact()">+ Добавить контакт</button>
           </div>
           <div id="supportContacts" class="info-grid" style="margin-top:18px"><div class="notice">Загрузка контактов...</div></div>
-          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.15</div></div>
+          <div class="info-grid" style="margin-top:12px"><div class="info-box"><b>Приложение</b><br>Рассрочка PRO • v9.4.13</div></div>
           <div class="notice" style="margin-top:22px"><b>Разработчик приложения: MRGHOST013</b></div>
         </div>
       </section>
@@ -824,6 +824,16 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
         <div class="card">
           <h2>Резервная копия</h2>
           <p id="backupDescription">Сохраните копию данных перед крупными изменениями.</p>
+          <div id="autoBackupPanel" style="margin:14px 0;padding:14px;border:1px solid #dce8f4;border-radius:14px;background:#f8fbff">
+            <h3 style="margin-bottom:8px">Автоматические копии</h3>
+            <div class="grid3">
+              <div id="backupSellerWrap"><label>Продавец</label><select id="backupSellerSelect" onchange="renderAutoBackupPanel()"></select></div>
+              <div><label>Интервал</label><select id="backupInterval"><option value="0">Отключено</option><option value="1">Каждый день</option><option value="3">Раз в 3 дня</option><option value="7">Раз в 7 дней</option><option value="14">Раз в 14 дней</option><option value="30">Раз в 30 дней</option></select></div>
+              <div style="display:flex;align-items:end;gap:8px"><button id="saveBackupScheduleBtn" class="btn primary" style="width:100%" onclick="saveAutoBackupSetting()">Установить график</button><button class="btn graybtn" style="width:100%" onclick="createAutoBackupNow()">Создать копию сейчас</button></div>
+            </div>
+            <p id="backupScheduleHelp" class="muted" style="margin:10px 0 6px">Администратор выбирает продавца и устанавливает для него отдельный интервал. Хранятся последние 7 копий. Каждую копию можно скачать отдельным JSON-файлом.</p>
+            <div id="autoBackupList"></div>
+          </div>
           <div class="row-actions">
             <button class="btn primary" onclick="exportData()">Скачать резервную копию</button>
             <label id="adminRestoreBackup" class="btn graybtn" style="display:inline-block;margin:0;cursor:pointer">
@@ -1890,6 +1900,7 @@ function showPage(id, btn) {
   if (id === "sellerDirectory") renderSellerDirectory(true);
   if (id === "support") loadSupportContacts();
   if (id === "trash") { purgeExpiredTrash().then(()=>renderTrash()); }
+  if (id === "settings") { try{runDueAutoBackups();renderAutoBackupPanel();}catch(e){} }
 }
 
 
@@ -2421,6 +2432,62 @@ async function saveClient() {
 
 
   if (duplicate) {
+
+    // Если совпавшая карточка находится в корзине, не создаём дубль.
+    // Предлагаем восстановить именно старую карточку — вместе со всей её историей.
+    if (duplicate.archivedAt) {
+      const restoreOk = confirm(
+        `Клиент ${fullName(duplicate)} уже есть в корзине.\n\n` +
+        `Восстановить старую карточку клиента вместе со всей историей рассрочек и платежей?`
+      );
+
+      if (restoreOk) {
+        try {
+          if (serverReady) {
+            let q = sb.from("clients")
+              .update({ archived_at:null, archived_by:null })
+              .eq("id", duplicate.id);
+            if (!isAdmin()) q = q.eq("seller_id", currentSellerId);
+            const {error} = await q;
+            if (error) throw error;
+
+            // Убираем соответствующую запись из корзины, если она ещё хранится там.
+            const trashMatches = (db.trash||[]).filter(x =>
+              x.itemType === "client" && x.itemId === duplicate.id &&
+              (isAdmin() || x.sellerId === currentSellerId)
+            );
+            if (trashMatches.length) {
+              const trashIds = trashMatches.map(x=>x.id);
+              const {error:trashError} = await sb.from("trash_items").delete().in("id", trashIds);
+              if (trashError) throw trashError;
+            }
+          }
+
+          duplicate.archivedAt = null;
+          duplicate.archivedBy = null;
+          db.trash = (db.trash||[]).filter(x => !(x.itemType === "client" && x.itemId === duplicate.id));
+          addAudit("Клиент восстановлен при повторном добавлении", fullName(duplicate));
+          localStorage.setItem(DBKEY, JSON.stringify(db));
+
+          savedClientPhotos = [];
+          selectedClientPhotos = [];
+          closeClientModal();
+          refreshAll();
+          showPage("clients");
+          setTimeout(()=>viewClient(duplicate.id), 50);
+          alert("Клиент восстановлен из корзины вместе со всей историей.");
+        } catch (e) {
+          alert("Не удалось восстановить клиента: " + (e.message || e));
+        }
+      } else {
+        document.getElementById("duplicateWarning").innerHTML = `
+          <div class="notice dangerbox">
+            ⚠️ Этот клиент уже находится в корзине: <b>${esc(fullName(duplicate))}</b>.
+            Новая дублирующая карточка не создана.
+          </div>`;
+      }
+      return;
+    }
 
     document.getElementById(
       "duplicateWarning"
@@ -3051,7 +3118,13 @@ function filterPaymentClients() {
 
   const q = normalize(input.value);
 
-  const clients = myClients()
+  const paymentEligibleClients = db.clients.filter(c => {
+    if (!(isAdmin() || c.sellerId === currentSellerId)) return false;
+    if (!c.archivedAt) return true;
+    return db.deals.some(d => d.clientId === c.id && (isAdmin() || d.sellerId === currentSellerId) && d.status !== "completed" && d.status !== "cancelled" && remaining(d) > 0);
+  });
+
+  const clients = paymentEligibleClients
     .filter(c => {
       const haystack = normalize([
         fullName(c),
@@ -3071,9 +3144,10 @@ function filterPaymentClients() {
   }
 
   results.innerHTML = clients.map(c => {
-    const activeDeals = myDeals().filter(d =>
+    const activeDeals = db.deals.filter(d =>
       d.clientId === c.id &&
-      d.status !== "completed" &&
+      (isAdmin() || d.sellerId === currentSellerId) &&
+      d.status !== "completed" && d.status !== "cancelled" &&
       remaining(d) > 0
     ).length;
 
@@ -3098,7 +3172,7 @@ function filterPaymentClients() {
 
 
 function selectPaymentClient(clientId) {
-  const client = myClients().find(c => c.id === clientId);
+  const client = db.clients.find(c => c.id === clientId && (isAdmin() || c.sellerId === currentSellerId));
   if (!client) return;
 
   document.getElementById("paymentClientId").value = client.id;
@@ -3124,9 +3198,10 @@ function renderPaymentClientDeals(clientId) {
   const select = document.getElementById("paymentDeal");
   if (!select) return;
 
-  const deals = myDeals().filter(d =>
+  const deals = db.deals.filter(d =>
     d.clientId === clientId &&
-    d.status !== "completed" &&
+    (isAdmin() || d.sellerId === currentSellerId) &&
+    d.status !== "completed" && d.status !== "cancelled" &&
     remaining(d) > 0
   );
 
@@ -3538,7 +3613,7 @@ function printDeal(id){
   const schedule=installmentSchedule(d);
   const w=window.open("","_blank");
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(d.contractNumber||"Рассрочка")}</title>
-  <style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}h1{margin-bottom:5px}.muted{color:#666}</style>\n<style>\n/* ===== v9.4.15 UNIFIED MOBILE COMPACT SCALE ===== */\n@media(max-width:700px){\n  /* Same compact visual density as Home, now across every tab */\n  main > section:not(#home){font-size:12.5px!important}\n  main > section:not(#home) .card{padding:9px!important;margin-bottom:7px!important;border-radius:13px!important}\n  main > section:not(#home) h1{font-size:20px!important;margin-bottom:7px!important}\n  main > section:not(#home) h2{font-size:19px!important;line-height:1.15!important;margin:0 0 8px!important}\n  main > section:not(#home) h3{font-size:15px!important;line-height:1.2!important;margin:0 0 7px!important}\n  main > section:not(#home) p{margin:5px 0!important;line-height:1.3!important}\n  main > section:not(#home) label{font-size:11.5px!important;margin:7px 0 4px!important}\n  main > section:not(#home) .muted,\n  main > section:not(#home) .form-help,\n  main > section:not(#home) .kpi-note{font-size:10.5px!important}\n  main > section:not(#home) .grid,\n  main > section:not(#home) .grid3,\n  main > section:not(#home) .two-col,\n  main > section:not(#home) .info-grid,\n  main > section:not(#home) .mini-stats{gap:7px!important}\n  main > section:not(#home) .toolbar{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) input,\n  main > section:not(#home) select,\n  main > section:not(#home) textarea{min-height:38px!important;padding:6px 8px!important;border-radius:11px!important;font-size:16px!important}\n  main > section:not(#home) textarea{min-height:68px!important}\n  main > section:not(#home) .btn{min-height:36px!important;padding:6px 9px!important;border-radius:11px!important;font-size:12px!important}\n  main > section:not(#home) .row-actions{gap:5px!important;margin-top:8px!important}\n  main > section:not(#home) .row-actions .btn{flex:1 1 110px!important}\n  main > section:not(#home) .notice,\n  main > section:not(#home) .empty,\n  main > section:not(#home) .alert-card,\n  main > section:not(#home) .note-card,\n  main > section:not(#home) .info-box,\n  main > section:not(#home) .mini,\n  main > section:not(#home) .summary-box,\n  main > section:not(#home) .v8-panel{padding:8px!important;border-radius:10px!important}\n  main > section:not(#home) .badge,\n  main > section:not(#home) .tag{font-size:10px!important;padding:3px 6px!important}\n  main > section:not(#home) .summary-strip{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) .summary-box strong{font-size:16px!important}\n  main > section:not(#home) table tbody{gap:7px!important}\n  main > section:not(#home) table tr{padding:8px!important;border-radius:12px!important}\n  main > section:not(#home) table td{grid-template-columns:minmax(78px,34%) minmax(0,1fr)!important;gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n  main > section:not(#home) table td::before{font-size:10px!important}\n  main > section:not(#home) .customer-result,\n  main > section:not(#home) .document-section,\n  main > section:not(#home) .seller-client-card,\n  main > section:not(#home) .seller-tab-content,\n  main > section:not(#home) .v8-client-folder{padding:8px!important;margin:6px 0!important;border-radius:11px!important}\n  main > section:not(#home) .customer-title,\n  main > section:not(#home) .seller-client-name{font-size:14px!important}\n  main > section:not(#home) .seller-cabinet-head{padding:8px!important;margin-bottom:7px!important;border-radius:11px!important}\n  main > section:not(#home) .seller-tabs,\n  main > section:not(#home) .v8-tabs{gap:5px!important;margin:7px 0!important}\n  main > section:not(#home) .seller-tabs .btn,\n  main > section:not(#home) .v8-tabs button{min-height:34px!important;padding:5px 8px!important;font-size:11px!important}\n  main > section:not(#home) .photo-preview{gap:7px!important;margin-top:7px!important}\n  main > section:not(#home) .photo-card img{height:105px!important}\n  main > section:not(#home) .client-search-item{padding:7px 8px!important;font-size:12px!important}\n  main > section:not(#home) .client-search-results{max-height:220px!important}\n  main > section:not(#home) .progress{height:6px!important}\n  /* Keep modals compact too, while inputs remain 16px to prevent iPhone auto-zoom */\n  .modal-card{padding:11px!important;border-radius:15px 15px 7px 7px!important;font-size:12.5px!important}\n  .modal-card h2{font-size:19px!important;margin-bottom:8px!important}\n  .modal-card h3{font-size:15px!important;margin-bottom:7px!important}\n  .modal-card label{font-size:11.5px!important;margin:7px 0 4px!important}\n  .modal-card input,.modal-card select,.modal-card textarea{min-height:38px!important;padding:6px 8px!important;font-size:16px!important;border-radius:11px!important}\n  .modal-card .btn{min-height:36px!important;padding:6px 9px!important;font-size:12px!important}\n  .modal-card .row-actions{gap:5px!important;margin-top:8px!important}\n  .modal-card table tbody{gap:7px!important}\n  .modal-card table tr{padding:8px!important;border-radius:12px!important}\n  .modal-card table td{gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n}\n</style>\n</head><body>
+  <style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}h1{margin-bottom:5px}.muted{color:#666}</style>\n<style>\n/* ===== v9.4.13 UNIFIED MOBILE COMPACT SCALE ===== */\n@media(max-width:700px){\n  /* Same compact visual density as Home, now across every tab */\n  main > section:not(#home){font-size:12.5px!important}\n  main > section:not(#home) .card{padding:9px!important;margin-bottom:7px!important;border-radius:13px!important}\n  main > section:not(#home) h1{font-size:20px!important;margin-bottom:7px!important}\n  main > section:not(#home) h2{font-size:19px!important;line-height:1.15!important;margin:0 0 8px!important}\n  main > section:not(#home) h3{font-size:15px!important;line-height:1.2!important;margin:0 0 7px!important}\n  main > section:not(#home) p{margin:5px 0!important;line-height:1.3!important}\n  main > section:not(#home) label{font-size:11.5px!important;margin:7px 0 4px!important}\n  main > section:not(#home) .muted,\n  main > section:not(#home) .form-help,\n  main > section:not(#home) .kpi-note{font-size:10.5px!important}\n  main > section:not(#home) .grid,\n  main > section:not(#home) .grid3,\n  main > section:not(#home) .two-col,\n  main > section:not(#home) .info-grid,\n  main > section:not(#home) .mini-stats{gap:7px!important}\n  main > section:not(#home) .toolbar{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) input,\n  main > section:not(#home) select,\n  main > section:not(#home) textarea{min-height:38px!important;padding:6px 8px!important;border-radius:11px!important;font-size:16px!important}\n  main > section:not(#home) textarea{min-height:68px!important}\n  main > section:not(#home) .btn{min-height:36px!important;padding:6px 9px!important;border-radius:11px!important;font-size:12px!important}\n  main > section:not(#home) .row-actions{gap:5px!important;margin-top:8px!important}\n  main > section:not(#home) .row-actions .btn{flex:1 1 110px!important}\n  main > section:not(#home) .notice,\n  main > section:not(#home) .empty,\n  main > section:not(#home) .alert-card,\n  main > section:not(#home) .note-card,\n  main > section:not(#home) .info-box,\n  main > section:not(#home) .mini,\n  main > section:not(#home) .summary-box,\n  main > section:not(#home) .v8-panel{padding:8px!important;border-radius:10px!important}\n  main > section:not(#home) .badge,\n  main > section:not(#home) .tag{font-size:10px!important;padding:3px 6px!important}\n  main > section:not(#home) .summary-strip{gap:6px!important;margin:7px 0!important}\n  main > section:not(#home) .summary-box strong{font-size:16px!important}\n  main > section:not(#home) table tbody{gap:7px!important}\n  main > section:not(#home) table tr{padding:8px!important;border-radius:12px!important}\n  main > section:not(#home) table td{grid-template-columns:minmax(78px,34%) minmax(0,1fr)!important;gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n  main > section:not(#home) table td::before{font-size:10px!important}\n  main > section:not(#home) .customer-result,\n  main > section:not(#home) .document-section,\n  main > section:not(#home) .seller-client-card,\n  main > section:not(#home) .seller-tab-content,\n  main > section:not(#home) .v8-client-folder{padding:8px!important;margin:6px 0!important;border-radius:11px!important}\n  main > section:not(#home) .customer-title,\n  main > section:not(#home) .seller-client-name{font-size:14px!important}\n  main > section:not(#home) .seller-cabinet-head{padding:8px!important;margin-bottom:7px!important;border-radius:11px!important}\n  main > section:not(#home) .seller-tabs,\n  main > section:not(#home) .v8-tabs{gap:5px!important;margin:7px 0!important}\n  main > section:not(#home) .seller-tabs .btn,\n  main > section:not(#home) .v8-tabs button{min-height:34px!important;padding:5px 8px!important;font-size:11px!important}\n  main > section:not(#home) .photo-preview{gap:7px!important;margin-top:7px!important}\n  main > section:not(#home) .photo-card img{height:105px!important}\n  main > section:not(#home) .client-search-item{padding:7px 8px!important;font-size:12px!important}\n  main > section:not(#home) .client-search-results{max-height:220px!important}\n  main > section:not(#home) .progress{height:6px!important}\n  /* Keep modals compact too, while inputs remain 16px to prevent iPhone auto-zoom */\n  .modal-card{padding:11px!important;border-radius:15px 15px 7px 7px!important;font-size:12.5px!important}\n  .modal-card h2{font-size:19px!important;margin-bottom:8px!important}\n  .modal-card h3{font-size:15px!important;margin-bottom:7px!important}\n  .modal-card label{font-size:11.5px!important;margin:7px 0 4px!important}\n  .modal-card input,.modal-card select,.modal-card textarea{min-height:38px!important;padding:6px 8px!important;font-size:16px!important;border-radius:11px!important}\n  .modal-card .btn{min-height:36px!important;padding:6px 9px!important;font-size:12px!important}\n  .modal-card .row-actions{gap:5px!important;margin-top:8px!important}\n  .modal-card table tbody{gap:7px!important}\n  .modal-card table tr{padding:8px!important;border-radius:12px!important}\n  .modal-card table td{gap:7px!important;padding:4px 0!important;font-size:12.5px!important}\n}\n</style>\n</head><body>
   <h1>Рассрочка PRO</h1>
   <p><b>№ договора:</b> ${esc(d.contractNumber||"—")} &nbsp; <b>Магазин:</b> ${esc(seller()?.shop||"—")}</p>
   <p><b>Клиент:</b> ${esc(c?fullName(c):"—")} &nbsp; <b>Дата рождения:</b> ${c?dateRu(c.birth):"—"}</p>
@@ -4558,32 +4633,18 @@ async function loadGlobalDealHistory(clientKey, targetId){
       return `<div class="card" style="margin-top:10px;padding:14px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap"><div><b>${esc(x.product||'Рассрочка')}</b><div class="muted">${esc(x.shop_name||'Магазин')} • ${x.created_at?dateRu(String(x.created_at).slice(0,10)):'—'}</div></div>${badge}</div><div style="margin-top:8px">Сумма: <b>${money(x.amount||0)}</b> • Оплачено: <b>${money(x.paid_amount||0)}</b> • Остаток: <b>${money(x.remaining_amount||0)}</b></div>${state==='overdue'?`<div style="margin-top:6px;color:#c92d2d">Просроченная сумма: <b>${money(x.overdue_amount||0)}</b></div>`:''}</div>`;
     }).join(''):'<div class="empty">История рассрочек не найдена.</div>';
     box.innerHTML=`<h3 style="margin:14px 0 6px">История рассрочек</h3>${tabs}${cards}${cancelled?`<div class="muted" style="margin-top:8px">Отменённых: ${cancelled}</div>`:''}`;
-    await loadGlobalOverdueHistory(clientKey, box, rows);
+    await loadGlobalOverdueHistory(clientKey, box);
   }catch(e){console.error(e);box.innerHTML='<div class="notice dangerbox">Не удалось загрузить историю рассрочек. Выполните SQL v9.1 в Supabase.</div>';}
 }
 
-async function loadGlobalOverdueHistory(clientKey, host, dealRows=[]){
+async function loadGlobalOverdueHistory(clientKey, host){
   try{
     const {data,error}=await sb.rpc('global_client_overdue_history_v921',{p_client_key:clientKey}); if(error) throw error;
-    const historyRows=(data||[]).filter(x=>Number(x.overdue_days||0)>=3);
-    // Historical RPC is authoritative only for already-paid overdue events.
-    // Current overdue must come from the live deal-history RPC so partial payments
-    // are reflected immediately and stale historical snapshots cannot inflate the amount.
-    const past=historyRows.filter(x=>x.overdue_status==='paid');
-    const liveCurrent=(dealRows||[]).filter(x=>x.deal_state==='overdue' && Number(x.overdue_amount||0)>0);
-    const currentAmount=liveCurrent.reduce((sum,x)=>sum+Number(x.overdue_amount||0),0);
-    const today=new Date(); today.setHours(0,0,0,0);
-    const current=liveCurrent.map(x=>{
-      const due=x.due_date||x.next_payment_date||x.payment_date||x.overdue_date||'';
-      let days=0;
-      if(due){ const dd=new Date(String(due).slice(0,10)+'T00:00:00'); if(!isNaN(dd)) days=Math.max(0,Math.floor((today-dd)/86400000)); }
-      return {...x,due_date:due,overdue_days:days,overdue_status:'current'};
-    }).filter(x=>Number(x.overdue_days||0)>=3);
-    const allForMax=[...past,...current];
-    const maxDays=allForMax.reduce((m,x)=>Math.max(m,Number(x.overdue_days||0)),0);
-    const rows=[...current,...past];
-    const html=`<h3 style="margin:16px 0 6px">Хронология просрочек</h3><div class="muted" style="margin:0 0 8px">В историю попадают только просрочки от 3 полных дней.</div><div class="mini-stats"><div class="mini"><strong style="color:${currentAmount>0?'#c92d2d':'#14894e'}">${currentAmount>0?'ЕСТЬ':'НЕТ'}</strong><div>Просрочка сейчас</div></div><div class="mini"><strong>${money(currentAmount)}</strong><div>Просрочено сейчас</div></div><div class="mini"><strong>${past.length}</strong><div>Погашенных просрочек</div></div><div class="mini"><strong>${maxDays}</strong><div>Макс. дней</div></div></div>`+
-    (rows.length?`<div style="margin-top:10px">${rows.map(x=>`<div class="notice ${x.overdue_status==='current'?'dangerbox':''}" style="margin-top:7px"><b>${esc(x.product||'Рассрочка')}</b> • ${esc(x.shop_name||'Магазин')}<br>Срок платежа: <b>${x.due_date?dateRu(String(x.due_date).slice(0,10)):'—'}</b> • Сумма просрочки: <b>${money(x.overdue_amount||0)}</b> • Просрочка: <b>${Number(x.overdue_days||0)} дн.</b><br>Статус: <b>${x.overdue_status==='current'?'Не погашена':'Погашена'+(x.paid_date?' '+dateRu(x.paid_date):'')}</b></div>`).join('')}</div>`:'<div class="notice" style="margin-top:8px">Истории просрочек нет.</div>');
+    const rows=(data||[]).filter(x=>Number(x.overdue_days||0)>=3), current=rows.filter(x=>x.overdue_status==='current'), past=rows.filter(x=>x.overdue_status==='paid');
+    const currentAmount=current.reduce((s,x)=>s+Number(x.overdue_amount||0),0);
+    const maxDays=rows.reduce((m,x)=>Math.max(m,Number(x.overdue_days||0)),0);
+    const html=`<h3 style="margin:16px 0 6px">Хронология просрочек</h3><div class="muted" style="margin:0 0 8px">В историю попадают только просрочки от 3 полных дней.</div><div class="mini-stats"><div class="mini"><strong style="color:${current.length?'#c92d2d':'#14894e'}">${current.length?'ЕСТЬ':'НЕТ'}</strong><div>Просрочка сейчас</div></div><div class="mini"><strong>${money(currentAmount)}</strong><div>Просрочено сейчас</div></div><div class="mini"><strong>${past.length}</strong><div>Погашенных просрочек</div></div><div class="mini"><strong>${maxDays}</strong><div>Макс. дней</div></div></div>`+
+    (rows.length?`<div style="margin-top:10px">${rows.map(x=>`<div class="notice ${x.overdue_status==='current'?'dangerbox':''}" style="margin-top:7px"><b>${esc(x.product||'Рассрочка')}</b> • ${esc(x.shop_name||'Магазин')}<br>Срок платежа: <b>${dateRu(x.due_date)}</b> • Сумма просрочки: <b>${money(x.overdue_amount||0)}</b> • Просрочка: <b>${Number(x.overdue_days||0)} дн.</b><br>Статус: <b>${x.overdue_status==='current'?'Не погашена':'Погашена'+(x.paid_date?' '+dateRu(x.paid_date):'')}</b></div>`).join('')}</div>`:'<div class="notice" style="margin-top:8px">Истории просрочек нет.</div>');
     host.insertAdjacentHTML('beforeend',html);
   }catch(e){console.error(e);host.insertAdjacentHTML('beforeend','<div class="notice dangerbox" style="margin-top:8px">История просрочек недоступна. Выполните SQL v9.2.</div>');}
 }
@@ -4870,6 +4931,50 @@ function renderHome() {
 }
 
 
+/* ===== v9.4.17 AUTOMATIC BACKUPS (last 7 per seller) ===== */
+const AUTO_BACKUP_KEY="rp_auto_backups_v9416";
+const AUTO_BACKUP_SETTINGS_KEY="rp_auto_backup_settings_v9416";
+function readAutoBackups(){try{return JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||"[]")||[]}catch(e){return []}}
+function writeAutoBackups(v){localStorage.setItem(AUTO_BACKUP_KEY,JSON.stringify(v))}
+function readAutoBackupSettings(){try{return JSON.parse(localStorage.getItem(AUTO_BACKUP_SETTINGS_KEY)||"{}")||{}}catch(e){return {}}}
+function backupScopeForSeller(sid){
+  const ownClients=db.clients.filter(x=>x.sellerId===sid), clientIds=new Set(ownClients.map(x=>x.id));
+  const ownDeals=db.deals.filter(x=>x.sellerId===sid), dealIds=new Set(ownDeals.map(x=>x.id));
+  return {version:"9.4.16",exportedAt:new Date().toISOString(),scope:"seller",sellerId:sid,
+    sellers:db.sellers.filter(x=>x.id===sid),clients:ownClients,deals:ownDeals,
+    payments:db.payments.filter(x=>x.sellerId===sid&&dealIds.has(x.dealId)),
+    blacklist:db.blacklist.filter(x=>x.addedBySellerId===sid&&clientIds.has(x.clientId)),
+    audit:(db.audit||[]).filter(x=>x.sellerId===sid),trash:(db.trash||[]).filter(x=>x.sellerId===sid)};
+}
+function selectedBackupSellerId(){return isAdmin()?(document.getElementById("backupSellerSelect")?.value||currentSellerId):currentSellerId}
+function saveAutoBackupSetting(){if(!isAdmin()){alert("Интервал автоматических копий устанавливает администратор.");return;} const sid=selectedBackupSellerId(); if(!sid)return; const v=Number(document.getElementById("backupInterval")?.value||0); const st=readAutoBackupSettings(); st[sid]={days:v,updatedAt:new Date().toISOString()}; localStorage.setItem(AUTO_BACKUP_SETTINGS_KEY,JSON.stringify(st)); renderAutoBackupPanel(); alert(v?"График резервного копирования установлен для выбранного продавца.":"Автоматическое резервное копирование для выбранного продавца отключено.")}
+function createAutoBackupForSeller(sid,automatic=false){if(!sid)return; let arr=readAutoBackups(); const payload=backupScopeForSeller(sid); arr.push({id:"ab_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),sellerId:sid,createdAt:new Date().toISOString(),automatic,payload}); const mine=arr.filter(x=>x.sellerId===sid).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))); const keep=new Set(mine.slice(0,7).map(x=>x.id)); arr=arr.filter(x=>x.sellerId!==sid||keep.has(x.id)); writeAutoBackups(arr); renderAutoBackupPanel()}
+function createAutoBackupNow(){createAutoBackupForSeller(selectedBackupSellerId(),false)}
+function downloadStoredBackup(id){const x=readAutoBackups().find(b=>b.id===id);if(!x)return;const blob=new Blob([JSON.stringify(x.payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="rassrochka-pro-"+(x.payload.sellers?.[0]?.shop||"seller").replace(/[^a-zа-я0-9_-]+/gi,"_")+"-"+x.createdAt.slice(0,10)+".json";a.click();URL.revokeObjectURL(url)}
+function deleteStoredBackup(id){if(!confirm("Удалить эту резервную копию?"))return;writeAutoBackups(readAutoBackups().filter(x=>x.id!==id));renderAutoBackupPanel()}
+function renderAutoBackupPanel(){
+  const panel=document.getElementById("autoBackupPanel"),sel=document.getElementById("backupSellerSelect"),wrap=document.getElementById("backupSellerWrap"),interval=document.getElementById("backupInterval"),list=document.getElementById("autoBackupList"),saveBtn=document.getElementById("saveBackupScheduleBtn"),help=document.getElementById("backupScheduleHelp");
+  if(!panel||!sel||!interval||!list)return;
+  const sellers=(db.sellers||[]).filter(x=>x.role!=="admin");
+  if(isAdmin()){
+    wrap.style.display="block";
+    const prev=sel.value;
+    sel.innerHTML=sellers.map(x=>`<option value="${x.id}">${esc(x.shop||x.fullName||x.email||x.id)}</option>`).join("");
+    if(prev&&sellers.some(x=>x.id===prev))sel.value=prev;
+    interval.disabled=false;if(saveBtn)saveBtn.style.display="";
+    if(help)help.textContent="Выберите продавца, задайте интервал и нажмите «Установить график». Для каждого продавца настройка хранится отдельно. Сохраняются последние 7 копий.";
+  }else{
+    wrap.style.display="none";sel.innerHTML=`<option value="${currentSellerId}"></option>`;sel.value=currentSellerId;
+    interval.disabled=true;if(saveBtn)saveBtn.style.display="none";
+    if(help)help.textContent="График автоматического резервного копирования устанавливает администратор. Вы можете просматривать и скачивать доступные копии своего магазина.";
+  }
+  const sid=selectedBackupSellerId(); const st=readAutoBackupSettings(); interval.value=String(st[sid]?.days||0);
+  const arr=readAutoBackups().filter(x=>x.sellerId===sid).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
+  list.innerHTML=arr.length?`<table><thead><tr><th>Дата</th><th>Тип</th><th>Действия</th></tr></thead><tbody>${arr.map(x=>`<tr><td data-label="Дата">${new Date(x.createdAt).toLocaleString("ru-RU")}</td><td data-label="Тип">${x.automatic?"Автоматическая":"Ручная"}</td><td data-label="Действия"><button class="btn primary" onclick="downloadStoredBackup('${x.id}')">Скачать файл</button> ${isAdmin()?`<button class="btn danger" onclick="deleteStoredBackup('${x.id}')">Удалить</button>`:""}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">Сохранённых автоматических копий пока нет.</div>';
+}
+function runDueAutoBackups(){const st=readAutoBackupSettings(),arr=readAutoBackups(),now=Date.now(); const ids=isAdmin()?(db.sellers||[]).filter(x=>x.role!=="admin").map(x=>x.id):[currentSellerId]; ids.forEach(sid=>{const days=Number(st[sid]?.days||0);if(!days)return;const last=arr.filter(x=>x.sellerId===sid&&x.automatic).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)))[0];if(!last||now-new Date(last.createdAt).getTime()>=days*86400000)createAutoBackupForSeller(sid,true)})}
+setInterval(()=>{try{runDueAutoBackups()}catch(e){}},60000);
+
 /* ================================
    BACKUP
 ================================ */
@@ -4943,17 +5048,38 @@ function clearAll() {
 /* ================================
    TRASH — 30 DAYS
 ================================ */
+function trashEffectiveDeletedAt(item){
+  // Для клиента серверное clients.archived_at — главный источник даты удаления.
+  if(item && item.itemType === "client"){
+    const c=(db.clients||[]).find(x=>x.id===item.itemId);
+    if(c && c.archivedAt) return c.archivedAt;
+  }
+  return item?.deletedAt || item?.deleted_at || null;
+}
+function trashEffectivePurgeAt(item){
+  const deletedAt=trashEffectiveDeletedAt(item);
+  if(deletedAt){
+    const t=new Date(deletedAt).getTime();
+    if(Number.isFinite(t)) return new Date(t+30*86400000).toISOString();
+  }
+  return item?.purgeAt || item?.purge_at || null;
+}
 function trashDaysLeft(item){
-  const end=new Date(item.purgeAt||item.purge_at||0).getTime();
+  const end=new Date(trashEffectivePurgeAt(item)||0).getTime();
   return Math.max(0,Math.ceil((end-Date.now())/86400000));
 }
 async function purgeExpiredTrash(){
   if(!serverReady) return;
   try{
-    let q=sb.from("trash_items").delete().lte("purge_at",new Date().toISOString());
-    if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
-    const {error}=await q; if(error) throw error;
-    db.trash=(db.trash||[]).filter(x=>new Date(x.purgeAt).getTime()>Date.now());
+    const visible=(db.trash||[]).filter(x=>isAdmin()||x.sellerId===currentSellerId);
+    const expiredIds=visible.filter(x=>new Date(trashEffectivePurgeAt(x)||0).getTime()<=Date.now()).map(x=>x.id);
+    if(expiredIds.length){
+      let q=sb.from("trash_items").delete().in("id",expiredIds);
+      if(!isAdmin()) q=q.eq("seller_id",currentSellerId);
+      const {error}=await q; if(error) throw error;
+      const dead=new Set(expiredIds);
+      db.trash=(db.trash||[]).filter(x=>!dead.has(x.id));
+    }
   }catch(e){console.warn("Trash purge:",e.message||e);}
 }
 function renderTrash(){
@@ -4962,7 +5088,7 @@ function renderTrash(){
   if(!arr.length){box.innerHTML='<div class="empty">Корзина пуста.</div>';return;}
   box.innerHTML=`<div class="admin-table-wrap"><table><thead><tr><th>Что удалено</th>${isAdmin()?'<th>Магазин</th>':''}<th>Дата удаления</th><th>Осталось</th><th></th></tr></thead><tbody>${arr.map(x=>{
     const shop=db.sellers.find(s=>s.id===x.sellerId)?.shop||'—';
-    return `<tr><td><b>${esc(x.title||'Удалённая запись')}</b><br><small>${x.itemType==='payment'?'Платёж':x.itemType==='client'?'Клиент':esc(x.itemType||'Запись')}</small></td>${isAdmin()?`<td>${esc(shop)}</td>`:''}<td>${dateRu(String(x.deletedAt||'').slice(0,10))}</td><td>${trashDaysLeft(x)} дн.</td><td><button class="btn primary" onclick="restoreTrashItem('${x.id}')">Восстановить</button></td></tr>`;
+    return `<tr><td><b>${esc(x.title||'Удалённая запись')}</b><br><small>${x.itemType==='payment'?'Платёж':x.itemType==='client'?'Клиент':esc(x.itemType||'Запись')}</small></td>${isAdmin()?`<td>${esc(shop)}</td>`:''}<td>${dateRu(String(trashEffectiveDeletedAt(x)||'').slice(0,10))}</td><td>${trashDaysLeft(x)} дн.</td><td><button class="btn primary" onclick="restoreTrashItem('${x.id}')">Восстановить</button></td></tr>`;
   }).join('')}</tbody></table></div>`;
 }
 async function restoreTrashItem(id){
@@ -5237,7 +5363,7 @@ setupStrictClientBirth();
 
 
 
-/* ===== v9.4.15 APP-LIKE BACK NAVIGATION / iPHONE EDGE SWIPE ===== */
+/* ===== v9.4.13 APP-LIKE BACK NAVIGATION / iPHONE EDGE SWIPE ===== */
 (function(){
   let navRestoring=false;
   let currentAppPage='home';
