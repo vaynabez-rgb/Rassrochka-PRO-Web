@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.4.17</title>
+<title>Рассрочка PRO v9.4.18</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -485,7 +485,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.4.17</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.18</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -500,7 +500,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.17</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.18</small></div><small id="shopLabel"></small></div>
     <div class="developer-signature" aria-label="Разработчик GHOST013"><span class="dev-caption">РАЗРАБОТЧИК</span><span class="dev-name">GHOST013</span></div>
     <div class="topbar-main-actions"><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
@@ -829,9 +829,9 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
             <div class="grid3">
               <div id="backupSellerWrap"><label>Продавец</label><select id="backupSellerSelect" onchange="renderAutoBackupPanel()"></select></div>
               <div><label>Интервал</label><select id="backupInterval"><option value="0">Отключено</option><option value="1">Каждый день</option><option value="3">Раз в 3 дня</option><option value="7">Раз в 7 дней</option><option value="14">Раз в 14 дней</option><option value="30">Раз в 30 дней</option></select></div>
-              <div style="display:flex;align-items:end;gap:8px"><button id="saveBackupScheduleBtn" class="btn primary" style="width:100%" onclick="saveAutoBackupSetting()">Установить график</button><button class="btn graybtn" style="width:100%" onclick="createAutoBackupNow()">Создать копию сейчас</button></div>
+              <div style="display:flex;align-items:end;gap:8px"><button id="saveBackupScheduleBtn" class="btn primary" style="width:100%" onclick="saveAutoBackupSetting()">Установить график</button><button class="btn graybtn" style="width:100%" onclick="createAutoBackupNow()">Создать на сервере сейчас</button></div>
             </div>
-            <p id="backupScheduleHelp" class="muted" style="margin:10px 0 6px">Администратор выбирает продавца и устанавливает для него отдельный интервал. Хранятся последние 7 копий. Каждую копию можно скачать отдельным JSON-файлом.</p>
+            <p id="backupScheduleHelp" class="muted" style="margin:10px 0 6px">Администратор выбирает продавца и устанавливает для него отдельный интервал. Хранятся последние 7 копий. График сохраняется на сервере; копии создаются независимо от открытого браузера.</p>
             <div id="autoBackupList"></div>
           </div>
           <div class="row-actions">
@@ -4931,49 +4931,62 @@ function renderHome() {
 }
 
 
-/* ===== v9.4.17 AUTOMATIC BACKUPS (last 7 per seller) ===== */
-const AUTO_BACKUP_KEY="rp_auto_backups_v9416";
-const AUTO_BACKUP_SETTINGS_KEY="rp_auto_backup_settings_v9416";
-function readAutoBackups(){try{return JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||"[]")||[]}catch(e){return []}}
-function writeAutoBackups(v){localStorage.setItem(AUTO_BACKUP_KEY,JSON.stringify(v))}
-function readAutoBackupSettings(){try{return JSON.parse(localStorage.getItem(AUTO_BACKUP_SETTINGS_KEY)||"{}")||{}}catch(e){return {}}}
-function backupScopeForSeller(sid){
-  const ownClients=db.clients.filter(x=>x.sellerId===sid), clientIds=new Set(ownClients.map(x=>x.id));
-  const ownDeals=db.deals.filter(x=>x.sellerId===sid), dealIds=new Set(ownDeals.map(x=>x.id));
-  return {version:"9.4.16",exportedAt:new Date().toISOString(),scope:"seller",sellerId:sid,
-    sellers:db.sellers.filter(x=>x.id===sid),clients:ownClients,deals:ownDeals,
-    payments:db.payments.filter(x=>x.sellerId===sid&&dealIds.has(x.dealId)),
-    blacklist:db.blacklist.filter(x=>x.addedBySellerId===sid&&clientIds.has(x.clientId)),
-    audit:(db.audit||[]).filter(x=>x.sellerId===sid),trash:(db.trash||[]).filter(x=>x.sellerId===sid)};
+/* ===== v9.4.18 SERVER BACKUPS ===== */
+let backupPanelSequence=0;
+function selectedBackupSellerId(){return isAdmin()?(document.getElementById("backupSellerSelect")?.value||""):currentSellerId}
+async function saveAutoBackupSetting(){
+ if(!isAdmin()){alert("Только администратор может менять расписание.");return;}
+ const sid=selectedBackupSellerId(),days=Number(document.getElementById("backupInterval")?.value||0);
+ if(!sid)return alert("Выберите продавца.");
+ const hours=days*24;
+ const record={seller_id:sid,enabled:days>0,interval_hours:hours,updated_by:currentSellerId,updated_at:new Date().toISOString(),next_run_at:days>0?new Date(Date.now()+hours*3600000).toISOString():null};
+ const {error}=await sb.from("backup_settings").upsert(record,{onConflict:"seller_id"});
+ if(error)return alert("Не удалось сохранить график: "+error.message+". Проверьте права администратора в Supabase.");
+ alert(days?"Серверное расписание сохранено.":"Серверное расписание отключено.");
+ await renderAutoBackupPanel();
 }
-function selectedBackupSellerId(){return isAdmin()?(document.getElementById("backupSellerSelect")?.value||currentSellerId):currentSellerId}
-function saveAutoBackupSetting(){if(!isAdmin()){alert("Интервал автоматических копий устанавливает администратор.");return;} const sid=selectedBackupSellerId(); if(!sid)return; const v=Number(document.getElementById("backupInterval")?.value||0); const st=readAutoBackupSettings(); st[sid]={days:v,updatedAt:new Date().toISOString()}; localStorage.setItem(AUTO_BACKUP_SETTINGS_KEY,JSON.stringify(st)); renderAutoBackupPanel(); alert(v?"График резервного копирования установлен для выбранного продавца.":"Автоматическое резервное копирование для выбранного продавца отключено.")}
-function createAutoBackupForSeller(sid,automatic=false){if(!sid)return; let arr=readAutoBackups(); const payload=backupScopeForSeller(sid); arr.push({id:"ab_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),sellerId:sid,createdAt:new Date().toISOString(),automatic,payload}); const mine=arr.filter(x=>x.sellerId===sid).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))); const keep=new Set(mine.slice(0,7).map(x=>x.id)); arr=arr.filter(x=>x.sellerId!==sid||keep.has(x.id)); writeAutoBackups(arr); renderAutoBackupPanel()}
-function createAutoBackupNow(){createAutoBackupForSeller(selectedBackupSellerId(),false)}
-function downloadStoredBackup(id){const x=readAutoBackups().find(b=>b.id===id);if(!x)return;const blob=new Blob([JSON.stringify(x.payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="rassrochka-pro-"+(x.payload.sellers?.[0]?.shop||"seller").replace(/[^a-zа-я0-9_-]+/gi,"_")+"-"+x.createdAt.slice(0,10)+".json";a.click();URL.revokeObjectURL(url)}
-function deleteStoredBackup(id){if(!confirm("Удалить эту резервную копию?"))return;writeAutoBackups(readAutoBackups().filter(x=>x.id!==id));renderAutoBackupPanel()}
-function renderAutoBackupPanel(){
-  const panel=document.getElementById("autoBackupPanel"),sel=document.getElementById("backupSellerSelect"),wrap=document.getElementById("backupSellerWrap"),interval=document.getElementById("backupInterval"),list=document.getElementById("autoBackupList"),saveBtn=document.getElementById("saveBackupScheduleBtn"),help=document.getElementById("backupScheduleHelp");
-  if(!panel||!sel||!interval||!list)return;
-  const sellers=(db.sellers||[]).filter(x=>x.role!=="admin");
-  if(isAdmin()){
-    wrap.style.display="block";
-    const prev=sel.value;
-    sel.innerHTML=sellers.map(x=>`<option value="${x.id}">${esc(x.shop||x.fullName||x.email||x.id)}</option>`).join("");
-    if(prev&&sellers.some(x=>x.id===prev))sel.value=prev;
-    interval.disabled=false;if(saveBtn)saveBtn.style.display="";
-    if(help)help.textContent="Выберите продавца, задайте интервал и нажмите «Установить график». Для каждого продавца настройка хранится отдельно. Сохраняются последние 7 копий.";
-  }else{
-    wrap.style.display="none";sel.innerHTML=`<option value="${currentSellerId}"></option>`;sel.value=currentSellerId;
-    interval.disabled=true;if(saveBtn)saveBtn.style.display="none";
-    if(help)help.textContent="График автоматического резервного копирования устанавливает администратор. Вы можете просматривать и скачивать доступные копии своего магазина.";
-  }
-  const sid=selectedBackupSellerId(); const st=readAutoBackupSettings(); interval.value=String(st[sid]?.days||0);
-  const arr=readAutoBackups().filter(x=>x.sellerId===sid).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
-  list.innerHTML=arr.length?`<table><thead><tr><th>Дата</th><th>Тип</th><th>Действия</th></tr></thead><tbody>${arr.map(x=>`<tr><td data-label="Дата">${new Date(x.createdAt).toLocaleString("ru-RU")}</td><td data-label="Тип">${x.automatic?"Автоматическая":"Ручная"}</td><td data-label="Действия"><button class="btn primary" onclick="downloadStoredBackup('${x.id}')">Скачать файл</button> ${isAdmin()?`<button class="btn danger" onclick="deleteStoredBackup('${x.id}')">Удалить</button>`:""}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">Сохранённых автоматических копий пока нет.</div>';
+async function createAutoBackupNow(){
+ alert("Для немедленного создания серверной копии используйте проверенный вызов seller-backup в Supabase. Кнопка не создаёт локальную копию под видом серверной. Автоматический запуск уже настроен через cron.");
 }
-function runDueAutoBackups(){const st=readAutoBackupSettings(),arr=readAutoBackups(),now=Date.now(); const ids=isAdmin()?(db.sellers||[]).filter(x=>x.role!=="admin").map(x=>x.id):[currentSellerId]; ids.forEach(sid=>{const days=Number(st[sid]?.days||0);if(!days)return;const last=arr.filter(x=>x.sellerId===sid&&x.automatic).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)))[0];if(!last||now-new Date(last.createdAt).getTime()>=days*86400000)createAutoBackupForSeller(sid,true)})}
-setInterval(()=>{try{runDueAutoBackups()}catch(e){}},60000);
+async function downloadStoredBackup(id){
+ const sid=selectedBackupSellerId();
+ const {data:rows,error}=await sb.from("seller_backups").select("id,seller_id,storage_path,status").eq("id",id).eq("seller_id",sid).limit(1);
+ if(error||!rows?.length)return alert("Нет доступа к этой копии: "+(error?.message||"не найдена"));
+ const row=rows[0];if(row.status!=="completed"||!row.storage_path)return alert("Копия ещё не готова.");
+ const {data,error:signError}=await sb.storage.from("seller-backups").createSignedUrl(row.storage_path,60);
+ if(signError||!data?.signedUrl)return alert("Не удалось получить файл: "+(signError?.message||"неизвестная ошибка")+". Проверьте политику чтения Storage.");
+ const a=document.createElement("a");a.href=data.signedUrl;a.target="_blank";a.rel="noopener";a.download="rassrochka-pro-backup.json";document.body.appendChild(a);a.click();a.remove();
+}
+async function deleteStoredBackup(id){alert("Удаление серверных копий выполняется по политике хранения последних 7 копий. Удаление вручную из приложения отключено для безопасности.");}
+async function renderAutoBackupPanel(){
+ const seq=++backupPanelSequence;
+ const sel=document.getElementById("backupSellerSelect"),wrap=document.getElementById("backupSellerWrap"),interval=document.getElementById("backupInterval"),list=document.getElementById("autoBackupList"),saveBtn=document.getElementById("saveBackupScheduleBtn"),help=document.getElementById("backupScheduleHelp");
+ if(!sel||!interval||!list)return;
+ if(isAdmin()){
+   wrap.style.display="block";const prev=sel.value;
+   const sellers=(db.sellers||[]).filter(x=>x.role!=="admin");
+   sel.innerHTML=sellers.map(x=>`<option value="${esc(x.id)}">${esc(x.shop||x.fullName||x.email||x.id)}</option>`).join("");
+   if(prev&&sellers.some(x=>x.id===prev))sel.value=prev;
+   interval.disabled=false;if(saveBtn)saveBtn.style.display="";
+ }else{
+   wrap.style.display="none";sel.innerHTML=`<option value="${esc(currentSellerId)}"></option>`;sel.value=currentSellerId;
+   interval.disabled=true;if(saveBtn)saveBtn.style.display="none";
+ }
+ const sid=selectedBackupSellerId();if(!sid){list.innerHTML='<div class="empty">Нет выбранного продавца.</div>';return;}
+ list.innerHTML='<div class="notice">Загружаем серверные резервные копии…</div>';
+ const [settings,backups]=await Promise.all([
+   sb.from("backup_settings").select("enabled,interval_hours,next_run_at,last_run_at").eq("seller_id",sid).maybeSingle(),
+   sb.from("seller_backups").select("id,seller_id,backup_type,created_at,status,storage_path,error_message").eq("seller_id",sid).order("created_at",{ascending:false}).limit(7)
+ ]);
+ if(seq!==backupPanelSequence)return;
+ if(settings.error||backups.error){list.innerHTML=`<div class="notice dangerbox">Ошибка чтения Supabase: ${esc(settings.error?.message||backups.error?.message)}. Проверьте RLS для резервных копий.</div>`;return;}
+ const cfg=settings.data;
+ interval.value=String(cfg?.enabled?Number(cfg.interval_hours||0)/24:0);
+ if(help)help.textContent=(isAdmin()?"Расписание сохраняется на сервере отдельно для каждого продавца. ":"Расписание устанавливает администратор. ")+(cfg?.next_run_at&&cfg.enabled?"Следующая проверка: "+new Date(cfg.next_run_at).toLocaleString("ru-RU")+". ":"")+"Показаны последние 7 серверных копий.";
+ const arr=backups.data||[];
+ list.innerHTML=arr.length?`<table><thead><tr><th>Дата</th><th>Тип</th><th>Статус</th><th>Действия</th></tr></thead><tbody>${arr.map(x=>`<tr><td data-label="Дата">${new Date(x.created_at).toLocaleString("ru-RU")}</td><td data-label="Тип">${x.backup_type==="automatic"?"Автоматическая":"Ручная"}</td><td data-label="Статус">${esc(x.status||"—")}${x.error_message?" — "+esc(x.error_message):""}</td><td data-label="Действия">${x.status==="completed"?`<button class="btn primary" onclick="downloadStoredBackup('${esc(x.id)}')">Скачать файл</button>`:"—"}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">Серверных резервных копий пока нет.</div>';
+}
+function runDueAutoBackups(){/* Серверный pg_cron запускает резервное копирование независимо от браузера. */}
 
 /* ================================
    BACKUP
