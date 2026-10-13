@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Рассрочка PRO v9.4.18</title>
+<title>Рассрочка PRO v9.4.20</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#182235}
@@ -485,7 +485,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
 
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
-    <h1>Рассрочка PRO <span class="version-pill">v9.4.18</span></h1>
+    <h1>Рассрочка PRO <span class="version-pill">v9.4.20</span></h1>
     <p class="muted">Закрытая система • вход по выданному доступу</p>
     <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <label>Пароль</label><input id="loginPassword" type="password" placeholder="Ваш пароль">
@@ -500,7 +500,7 @@ button[onclick*="delete" i],button[onclick*="Delete"],.btn.danger,.danger{
   <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню" onclick="toggleMobileNav()">☰</button>
   <div id="mobileNavBackdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
   <header class="topbar">
-    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.18</small></div><small id="shopLabel"></small></div>
+    <div><div class="brand">Рассрочка PRO <small style="font-size:11px;color:#738096">v9.4.20</small></div><small id="shopLabel"></small></div>
     <div class="developer-signature" aria-label="Разработчик GHOST013"><span class="dev-caption">РАЗРАБОТЧИК</span><span class="dev-name">GHOST013</span></div>
     <div class="topbar-main-actions"><span id="syncStatus" class="badge bgreen" title="Состояние соединения">● Онлайн</span> <span id="sellerLabel"></span> <button class="btn graybtn" onclick="logout()">Выйти</button></div>
   </header>
@@ -3978,94 +3978,64 @@ function renderDeals() {
    PAYMENTS
 ================================ */
 
-function addPayment() {
-
-  const dealId =
-    document.getElementById("paymentDeal").value;
-
-  const amount =
-    Number(
-      document.getElementById("paymentAmount").value
-    );
-
-  const date =
-    document.getElementById("paymentDate").value;
-
-  const d =
-    db.deals.find(x => x.id === dealId);
-
-
-  if (
-    !d ||
-    amount <= 0 ||
-    !date
-  ) {
-
-    alert(
-      "Выберите рассрочку и укажите сумму платежа."
-    );
-
+let paymentSubmissionBusy = false;
+async function addPayment() {
+  if (paymentSubmissionBusy) return;
+  const button = document.querySelector('button[onclick="addPayment()"]');
+  const dealId = document.getElementById("paymentDeal").value;
+  const rawAmount = document.getElementById("paymentAmount").value;
+  const amount = Number(rawAmount);
+  const date = document.getElementById("paymentDate").value;
+  const d = db.deals.find(x => x.id === dealId);
+  if (!d || d.sellerId !== currentSellerId || d.status !== "active" || !Number.isFinite(amount) || amount <= 0 || !/^\d+(?:\.\d{1,2})?$/.test(rawAmount) || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    alert("Проверьте рассрочку, дату и сумму (не более двух знаков после запятой).");
     return;
   }
-
-
-  if (amount > remaining(d)) {
-
-    alert(
-      "Платёж больше остатка. Остаток: " +
-      money(remaining(d))
-    );
-
+  if (amount > remaining(d) + 0.001) {
+    alert("Платёж больше остатка. Остаток: " + money(remaining(d)));
     return;
   }
-
-
-  db.payments.push({
-
-    id: uid("payment"),
-
-    sellerId:
-      currentSellerId,
-
-    dealId,
-
-    amount,
-
-    date,
-
-    createdAt:
-      new Date().toISOString()
-  });
-
-  addAudit("Добавлен платёж", `${d.contractNumber || d.id}: ${money(amount)}`);
-
-
-  document.getElementById(
-    "paymentAmount"
-  ).value = "";
-
-  const paymentClientSearch = document.getElementById("paymentClientSearch");
-  const paymentClientId = document.getElementById("paymentClientId");
-  const selectedPaymentClient = document.getElementById("selectedPaymentClient");
-
-  if (paymentClientSearch) paymentClientSearch.value = "";
-  if (paymentClientId) paymentClientId.value = "";
-
-  if (selectedPaymentClient) {
-    selectedPaymentClient.innerHTML = "";
-    selectedPaymentClient.classList.add("hidden");
+  if (!serverReady || !sb || !navigator.onLine) {
+    alert("Для безопасного сохранения платежа необходимо подключение к серверу. Платёж не записан.");
+    return;
   }
-
-
-  saveDB();
+  paymentSubmissionBusy = true;
+  if (button) button.disabled = true;
+  const payment = {id:crypto.randomUUID(),seller_id:currentSellerId,deal_id:dealId,amount:amount,payment_date:date};
+  try {
+    // Server is the source of truth. Do not add a payment locally before confirmation.
+    const {error} = await sb.from("payments").insert(payment);
+    if (error) throw error;
+    await loadServerData();
+    document.getElementById("paymentAmount").value = "";
+    const search = document.getElementById("paymentClientSearch");
+    const clientId = document.getElementById("paymentClientId");
+    const selected = document.getElementById("selectedPaymentClient");
+    if (search) search.value = "";
+    if (clientId) clientId.value = "";
+    if (selected) {selected.innerHTML = "";selected.classList.add("hidden");}
+    refreshAll();
+  } catch (error) {
+    alert("Платёж не подтверждён. Проверьте историю платежей перед повторной попыткой: " + (error.message || error));
+  } finally {
+    paymentSubmissionBusy = false;
+    if (button) button.disabled = false;
+  }
 }
 
 
 let homePaymentFilter="all";
 function renderPayments() {
   const box=document.getElementById("paymentsTable"); if(!box)return;
-  const dealIds=myDeals().map(d=>d.id);
-  let arr=db.payments.filter(p=>dealIds.includes(p.dealId)).sort((a,b)=>{
+  // История платежей включает и архивные сделки/клиентов:
+  // помещение клиента в корзину не удаляет его финансовую историю.
+  // При этом продавец видит исключительно платежи своего магазина.
+  const dealIds=new Set(db.deals
+    .filter(d=>isAdmin() || d.sellerId===currentSellerId)
+    .map(d=>d.id));
+  let arr=db.payments.filter(p=>
+    dealIds.has(p.dealId) && (isAdmin() || p.sellerId===currentSellerId)
+  ).sort((a,b)=>{
     const byDate=(b.date||"").localeCompare(a.date||"");
     return byDate || (b.createdAt||"").localeCompare(a.createdAt||"");
   });
