@@ -3453,25 +3453,85 @@ function renderScheduleTable(d){
   </table>`;
 }
 
+function reminderWhatsappPhone(raw){
+  let digits=String(raw||"").replace(/\D/g,"");
+  if(digits.length===11 && digits[0]==="8") digits="7"+digits.slice(1);
+  if(digits.length===10) digits="7"+digits;
+  return digits.length>=10 && digits.length<=15 ? digits : "";
+}
+
+function openReminderWhatsapp(dealId){
+  const d=myDeals().find(x=>x.id===dealId && x.status!=="completed");
+  if(!d) return alert("Договор не найден.");
+  const c=db.clients.find(x=>x.id===d.clientId && (isAdmin() || x.sellerId===currentSellerId));
+  if(!c) return alert("Клиент не найден.");
+  const phone=reminderWhatsappPhone(c.phone);
+  if(!phone) return alert("У клиента нет корректного номера телефона WhatsApp.");
+  const schedule=installmentSchedule(d);
+  const next=schedule.find(r=>r.left>0.01);
+  if(!next) return alert("По этому договору задолженности нет.");
+  const overdue=schedule.filter(r=>r.left>0.01 && r.date<today());
+  const overdueTotal=overdue.reduce((sum,r)=>sum+r.left,0);
+  const diff=daysBetween(today(),next.date);
+  const firstName=String(c.name||"").trim() || "клиент";
+  const intro=overdueTotal>0.01
+    ? "По вашей рассрочке имеется просроченный платёж."
+    : diff===0 ? "Сегодня дата очередного платежа по вашей рассрочке."
+    : "Напоминаем о предстоящем платеже по вашей рассрочке.";
+  const lines=[
+    `Здравствуйте, ${firstName}!`,
+    "",
+    intro,
+    "",
+    `Товар: ${d.product||"—"}`,
+    `Договор: № ${d.contractNumber||"—"}`,
+    `Стоимость товара: ${money(d.amount)}`,
+    `Дата платежа: ${dateRu(next.date)}`,
+    `Сумма к оплате по платежу: ${money(next.left)}`,
+    ...(overdueTotal>0.01 ? [`Просрочено на сегодня: ${money(overdueTotal)}`] : []),
+    `Общий остаток по рассрочке: ${money(remaining(d))}`,
+    "",
+    "Просим произвести оплату своевременно. Благодарим вас!"
+  ];
+  const url="https://wa.me/"+phone+"?text="+encodeURIComponent(lines.join("\n"));
+  window.open(url,"_blank","noopener,noreferrer");
+}
+
 function renderNotifications(){
   const box=document.getElementById("notificationList");
   if(!box) return;
   const items=[];
-
   myDeals().filter(d=>d.status!=="completed").forEach(d=>{
-    const c=db.clients.find(x=>x.id===d.clientId);
-    const next=installmentSchedule(d).find(r=>r.status!=="paid");
+    const c=db.clients.find(x=>x.id===d.clientId && (isAdmin() || x.sellerId===currentSellerId));
+    if(!c) return;
+    const schedule=installmentSchedule(d);
+    const next=schedule.find(r=>r.left>0.01);
     if(!next) return;
     const diff=daysBetween(today(),next.date);
-    if(next.status==="overdue"){
-      items.push({priority:0,html:`<div class="alert-card red"><b>Просрочка: ${esc(c?fullName(c):"Клиент")}</b><br>${esc(d.product)} — ${money(next.left)}. Дата платежа: ${dateRu(next.date)}.</div>`});
-    } else if(diff>=0 && diff<=7){
-      items.push({priority:1,html:`<div class="alert-card"><b>Скоро платёж: ${esc(c?fullName(c):"Клиент")}</b><br>${esc(d.product)} — ${money(next.left)}. До ${dateRu(next.date)} (${diff===0?"сегодня":diff+" дн."}).</div>`});
-    }
+    const overdue=schedule.filter(r=>r.left>0.01 && r.date<today());
+    const overdueTotal=overdue.reduce((sum,r)=>sum+r.left,0);
+    if(overdueTotal<=0.01 && (diff<0 || diff>7)) return;
+    const isLate=overdueTotal>0.01;
+    const timing=isLate ? "Просрочено" : diff===0 ? "Оплатить сегодня" : `До платежа ${diff} дн.`;
+    const id=String(d.id).replace(/[^a-zA-Z0-9_-]/g,"");
+    const phone=reminderWhatsappPhone(c.phone);
+    items.push({
+      priority:isLate?0:1,
+      date:next.date,
+      html:`<div class="alert-card ${isLate?"red":""}">
+        <b>${esc(fullName(c))}</b> <span class="badge ${isLate?"bred":"bblue"}">${timing}</span>
+        <div style="margin-top:8px">Товар: <b>${esc(d.product||"—")}</b> · Договор № ${esc(d.contractNumber||"—")}</div>
+        <div>Дата платежа: ${dateRu(next.date)} · К оплате: <b>${money(next.left)}</b></div>
+        ${isLate?`<div class="status-bad">Просрочено всего: ${money(overdueTotal)}</div>`:""}
+        <div>Остаток по рассрочке: <b>${money(remaining(d))}</b></div>
+        <div class="row-actions"><button class="btn primary" ${phone?"":"disabled title=\"Нет корректного номера телефона\""} onclick="openReminderWhatsapp('${id}')">WhatsApp — написать клиенту</button></div>
+        ${phone?"":'<small class="muted">Добавьте корректный телефон в карточке клиента.</small>'}
+      </div>`
+    });
   });
-
-  box.innerHTML=items.length?items.sort((a,b)=>a.priority-b.priority).map(x=>x.html).join(""):
-    '<div class="alert-card green"><b>Срочных напоминаний нет.</b><br>Нет просроченных платежей и платежей на ближайшие 7 дней.</div>';
+  items.sort((a,b)=>a.priority-b.priority || a.date.localeCompare(b.date));
+  box.innerHTML=items.length?items.map(x=>x.html).join(""):
+    '<div class="alert-card green"><b>Срочных напоминаний нет.</b><br>Нет неоплаченных платежей на ближайшие 7 дней и просрочек.</div>';
 }
 
 function markDealPaid(id){
